@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validated Entry</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        
+        .form-container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #1a73e8; margin-bottom: 20px; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #5f6368; font-weight: 500; }
+        input { width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; transition: all 0.3s; }
+        input:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 2px rgba(26,115,232,0.2); }
+        
+        /* LOCKED STATE */
+        input:disabled, button:disabled { background-color: #f1f3f4; color: #80868b; cursor: not-allowed; border-color: #dadce0; }
+        button { width: 100%; background-color: #1a73e8; color: white; padding: 12px; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:hover { background-color: #1557b0; }
+
+        /* --- POPUP & LOADER STYLES --- */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; /* Hidden by default */
+            justify-content: center; align-items: center; z-index: 1000;
+        }
+        
+        /* 1. Loader Spinner */
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid #1a73e8; border-radius: 50%;
+            width: 50px; height: 50px; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* 2. Message Box */
+        .msg-box {
+            background: white; padding: 25px; border-radius: 8px; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-width: 80%; width: 300px;
+            display: none; /* Hidden inside overlay initially */
+        }
+        .msg-box h3 { margin-top: 0; }
+        .msg-box p { color: #555; }
+        .msg-btn {
+            background: #1a73e8; color: white; border: none; padding: 10px 20px;
+            border-radius: 4px; cursor: pointer; margin-top: 15px; width: 100%;
+        }
+        
+        /* Success/Error Colors */
+        .success h3 { color: #34a853; }
+        .error h3 { color: #ea4335; }
+        .error .msg-btn { background: #ea4335; }
+
+        .location-status { font-size: 13px; padding: 10px; background-color: #e8f0fe; color: #1a73e8; border-radius: 4px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .dot { height: 10px; width: 10px; background-color: #ccc; border-radius: 50%; display: inline-block; }
+        .dot.active { background-color: #34a853; }
+        .dot.error { background-color: #ea4335; }
+    </style>
+</head>
+<body>
+
+<div id="overlay" class="overlay">
+    <div id="loader" class="spinner"></div>
+
+    <div id="popup" class="msg-box">
+        <h3 id="popupTitle">Title</h3>
+        <p id="popupText">Message goes here.</p>
+        <button class="msg-btn" onclick="closePopup()">OK</button>
+    </div>
+</div>
+
+<div class="form-container">
+    <h2>Secure Entry</h2>
+    
+    <div class="location-status">
+        <span class="dot" id="locDot"></span> 
+        <span id="locText">Acquiring GPS location...</span>
+    </div>
+
+    <form id="collectionForm">
+        
+        <div class="form-group">
+            <label for="passport">Passport No.</label>
+            <input type="text" id="passport" name="passport" required placeholder="Enter Passport..." autocomplete="off">
+            <div style="font-size:12px; color:#666; margin-top:4px;">Press Enter or click away to verify</div>
+        </div>
+
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" disabled required placeholder="Locked">
+        </div>
+
+        <div class="form-group">
+            <label for="mobile">Whatsapp Mobile No</label>
+            <input type="tel" id="mobile" disabled required placeholder="Locked">
+        </div>
+
+        <div class="form-group">
+            <label for="district">District</label>
+            <input type="text" id="district" disabled required placeholder="Locked">
+        </div>
+
+        <input type="hidden" id="lat"><input type="hidden" id="long">
+        <button type="submit" id="submitBtn" disabled>Submit Data</button>
+    </form>
+</div>
+
+<script>
+    // ==========================================
+    // PASTE YOUR GOOGLE SCRIPT URL HERE
+    // ==========================================
+    const scriptURL = "https://script.google.com/macros/s/AKfycbywwNqeEiCL9MFH_gCaBdOVPAuATkiXvMiDM3XPI72CD5YBVfHpZ1EoFvm9jdgfFAEEkw/exec";
+
+
+    // --- DOM Elements ---
+    const overlay = document.getElementById('overlay');
+    const loader = document.getElementById('loader');
+    const popup = document.getElementById('popup');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupText = document.getElementById('popupText');
+    const popupBox = document.querySelector('.msg-box'); // for coloring
+
+    const passportInput = document.getElementById('passport');
+    const nameInput = document.getElementById('fullName');
+    const mobileInput = document.getElementById('mobile');
+    const districtInput = document.getElementById('district');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // --- 1. Event Listener: Trigger Verification on 'Change' ---
+    // (Fires when user presses Enter or clicks outside the box)
+    passportInput.addEventListener('change', function() {
+        const val = this.value.trim();
+        if(val.length < 2) return;
+        
+        startLoading();
+        
+        // Call Server
+        fetch(`${scriptURL}?q=${encodeURIComponent(val)}`)
+        .then(res => res.json())
+        .then(data => {
+            stopLoading();
+            if(data.valid) {
+                showPopup("success", "Verified!", "Found: " + data.name);
+                unlockForm(data.name);
+            } else {
+                showPopup("error", "Invalid Passport", "No record found for this number.");
+                lockForm();
+            }
+        })
+        .catch(err => {
+            stopLoading();
+            showPopup("error", "Error", "Connection failed. Try again.");
+        });
+    });
+
+    // --- 2. Visual Functions ---
+    function startLoading() {
+        overlay.style.display = 'flex';
+        loader.style.display = 'block';
+        popup.style.display = 'none';
+        passportInput.blur(); // Remove focus
+    }
+
+    function stopLoading() {
+        loader.style.display = 'none';
+    }
+
+    function showPopup(type, title, msg) {
+        overlay.style.display = 'flex'; // Ensure overlay is on
+        popup.style.display = 'block';
+        popupTitle.innerText = title;
+        popupText.innerText = msg;
+        
+        // Remove old classes
+        popupBox.classList.remove("success", "error");
+        // Add new class
+        popupBox.classList.add(type);
+    }
+
+    function closePopup() {
+        overlay.style.display = 'none';
+    }
+
+    function unlockForm(name) {
+        nameInput.value = name;
+        nameInput.disabled = false;
+        mobileInput.disabled = false;
+        districtInput.disabled = false;
+        submitBtn.disabled = false;
+        
+        mobileInput.placeholder = "+91 98765 43210";
+        districtInput.placeholder = "New Delhi";
+        mobileInput.focus(); // Jump to next field
+    }
+
+    function lockForm() {
+        nameInput.value = "";
+        nameInput.disabled = true;
+        mobileInput.disabled = true;
+        districtInput.disabled = true;
+        submitBtn.disabled = true;
+        passportInput.value = ""; // Clear bad input
+        passportInput.focus(); // Let them try again
+    }
+
+    // --- 3. Location & Submit (Standard) ---
+    const locText = document.getElementById('locText');
+    const locDot = document.getElementById('locDot');
+    
+    window.onload = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    document.getElementById('lat').value = pos.coords.latitude;
+                    document.getElementById('long').value = pos.coords.longitude;
+                    locText.innerText = "Location Captured";
+                    locDot.classList.add("active");
+                }, 
+                () => {
+                    locText.innerText = "Location Failed";
+                    locDot.classList.add("error");
+                }
+            );
+        }
+    };
+
+    document.getElementById('collectionForm').addEventListener('submit', e => {
+        e.preventDefault();
+        startLoading(); // Show spinner again for sending
+        
+        let body = {
+            name: nameInput.value,
+            passport: passportInput.value,
+            mobile: mobileInput.value,
+            district: districtInput.value,
+            lat: document.getElementById('lat').value,
+            long: document.getElementById('long').value
+        };
+
+        fetch(scriptURL, {
+            method: 'POST', mode: 'no-cors',
+            headers: {'Content-Type': 'text/plain;charset=utf-8'},
+            body: JSON.stringify(body)
+        }).then(() => {
+            stopLoading();
+            showPopup("success", "Saved!", "Data submitted successfully.");
+            lockForm(); // Reset for next person
+        }).catch(() => {
+            stopLoading();
+            showPopup("error", "Failed", "Could not save data.");
+        });
+    });
+</script>
+
+</body>
+</html>
