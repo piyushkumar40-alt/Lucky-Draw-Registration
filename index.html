@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Makpower India | Secure Entry</title>
+    <title>Makpower India | Coupon Registration</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
@@ -32,7 +32,7 @@
             background: white;
             padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08); /* Soft, expensive shadow */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
             width: 100%;
             max-width: 420px;
             text-align: center;
@@ -44,7 +44,7 @@
             margin-bottom: 25px;
         }
         .logo-container img {
-            max-height: 60px; /* Adjust based on your logo shape */
+            max-height: 60px; 
             max-width: 100%;
             object-fit: contain;
         }
@@ -134,18 +134,9 @@
             color: #95a5a6;
         }
 
-        /* LOCATION BADGE */
+        /* HIDDEN LOCATION BADGE (Still works in background) */
         .location-badge {
-            display: inline-flex;
-            align-items: center;
-            background: #e3fcf0;
-            color: #00b894;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            border: 1px solid #dff9eb;
+            display: none; /* Hidden as requested */
         }
         .dot {
             height: 8px; width: 8px;
@@ -155,7 +146,6 @@
             box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
         }
         .dot.error { background-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(238, 28, 37, 0.2); }
-        .location-badge.error { background: #fff0f1; color: var(--primary-color); border-color: #ffe0e1; }
 
         /* OVERLAY & POPUP */
         .overlay {
@@ -197,7 +187,7 @@
         <img src="Mak_Logo 1212.jpg" alt="Makpower India Logo">
     </div>
 
-    <h2>Secure Partner Entry</h2>
+    <h2>Coupon Registration</h2>
     
     <div class="location-badge" id="locBadge">
         <span class="dot" id="locDot"></span> 
@@ -228,7 +218,7 @@
 
         <input type="hidden" id="lat"><input type="hidden" id="long">
 
-        <button type="submit" id="submitBtn" disabled>SUBMIT ENTRY</button>
+        <button type="submit" id="submitBtn" disabled>Submit</button>
     </form>
 </div>
 
@@ -318,7 +308,7 @@
         passportInput.value = "";
     }
 
-    // 3. GPS LOGIC
+    // 3. GPS LOGIC (Runs silently in background)
     const locText = document.getElementById('locText');
     const locDot = document.getElementById('locDot');
     const locBadge = document.getElementById('locBadge');
@@ -360,7 +350,7 @@
             body: JSON.stringify(body)
         }).then(() => {
             hideLoader();
-            showPopup("Success", "Data saved successfully.");
+            showPopup("Success", "Sent for verification."); // Changed message
             lockForm();
         }).catch(() => {
             hideLoader();
