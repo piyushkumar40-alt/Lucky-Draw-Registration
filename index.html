@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makpower India | Secure Entry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #EE1C25; /* Makpower Red */
+            --primary-hover: #cc0000;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        /* CARD DESIGN */
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08); /* Soft, expensive shadow */
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* LOGO SECTION */
+        .logo-container {
+            margin-bottom: 25px;
+        }
+        .logo-container img {
+            max-height: 60px; /* Adjust based on your logo shape */
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        h2 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 10px 0 30px 0;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+
+        /* FORM GROUPS */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* INPUT FIELDS */
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #eef2f7;
+            border-radius: var(--border-radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: #2c3e50;
+            background: #fdfdfd;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 4px 15px rgba(238, 28, 37, 0.1);
+        }
+
+        /* LOCKED STATE */
+        input:disabled {
+            background-color: #f8f9fa;
+            border-color: #f0f0f0;
+            color: #aeb6bf;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* BUTTON DESIGN */
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(238, 28, 37, 0.2);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(238, 28, 37, 0.3);
+        }
+        
+        button:disabled {
+            background-color: #dcdde1;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+            color: #95a5a6;
+        }
+
+        /* LOCATION BADGE */
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #e3fcf0;
+            color: #00b894;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            border: 1px solid #dff9eb;
+        }
+        .dot {
+            height: 8px; width: 8px;
+            background-color: #00b894;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
+        }
+        .dot.error { background-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(238, 28, 37, 0.2); }
+        .location-badge.error { background: #fff0f1; color: var(--primary-color); border-color: #ffe0e1; }
+
+        /* OVERLAY & POPUP */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center; z-index: 999;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color);
+            border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite;
+        }
+        
+        .popup {
+            background: white; padding: 30px; border-radius: 20px;
+            text-align: center; width: 300px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            display: none;
+        }
+        .popup h3 { margin: 0 0 10px 0; color: #2d3436; }
+        .popup button { margin-top: 20px; padding: 12px; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="overlay" class="overlay">
+    <div id="loader" class="spinner"></div>
+    <div id="popup" class="popup">
+        <h3 id="popupTitle">Message</h3>
+        <p id="popupText" style="color:#636e72; font-size:14px;">Details</p>
+        <button onclick="closePopup()">Continue</button>
+    </div>
+</div>
+
+<div class="form-container">
+    <div class="logo-container">
+        <img src="Mak_Logo 1212.jpg" alt="Makpower India Logo">
+    </div>
+
+    <h2>Secure Partner Entry</h2>
+    
+    <div class="location-badge" id="locBadge">
+        <span class="dot" id="locDot"></span> 
+        <span id="locText">Locating...</span>
+    </div>
+
+    <form id="collectionForm">
+        
+        <div class="form-group">
+            <label>Passport Number</label>
+            <input type="text" id="passport" placeholder="Enter ID to Verify..." autocomplete="off" required>
+        </div>
+
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" placeholder="Locked" disabled>
+        </div>
+
+        <div class="form-group">
+            <label>Whatsapp Mobile</label>
+            <input type="tel" id="mobile" placeholder="Locked" disabled>
+        </div>
+
+        <div class="form-group">
+            <label>District</label>
+            <input type="text" id="district" placeholder="Locked" disabled>
+        </div>
+
+        <input type="hidden" id="lat"><input type="hidden" id="long">
+
+        <button type="submit" id="submitBtn" disabled>SUBMIT ENTRY</button>
+    </form>
+</div>
+
+<script>
+    // ==========================================
+    // CONFIGURATION
+    // ==========================================
+    const scriptURL = "https://script.google.com/macros/s/AKfycbywwNqeEiCL9MFH_gCaBdOVPAuATkiXvMiDM3XPI72CD5YBVfHpZ1EoFvm9jdgfFAEEkw/exec";
+    // ==========================================
+
+    // DOM ELEMENTS
+    const overlay = document.getElementById('overlay');
+    const loader = document.getElementById('loader');
+    const popup = document.getElementById('popup');
+    const popupTitle = document.getElementById('popupTitle');
+    const popupText = document.getElementById('popupText');
+    
+    const passportInput = document.getElementById('passport');
+    const nameInput = document.getElementById('fullName');
+    const mobileInput = document.getElementById('mobile');
+    const districtInput = document.getElementById('district');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // 1. PASSPORT VALIDATION LOGIC
+    passportInput.addEventListener('change', function() {
+        const val = this.value.trim();
+        if(val.length < 2) return;
+        
+        showLoader();
+        
+        fetch(`${scriptURL}?q=${encodeURIComponent(val)}`)
+        .then(res => res.json())
+        .then(data => {
+            hideLoader();
+            if(data.valid) {
+                showPopup("Identity Verified", "Welcome, " + data.name);
+                unlockForm(data.name);
+            } else {
+                showPopup("Access Denied", "Passport number not found.");
+                lockForm();
+            }
+        })
+        .catch(() => {
+            hideLoader();
+            showPopup("Error", "Please check internet connection.");
+        });
+    });
+
+    // 2. HELPER FUNCTIONS
+    function showLoader() {
+        overlay.style.display = 'flex';
+        loader.style.display = 'block';
+        popup.style.display = 'none';
+        passportInput.blur();
+    }
+    
+    function hideLoader() {
+        loader.style.display = 'none';
+    }
+
+    function showPopup(title, msg) {
+        overlay.style.display = 'flex';
+        popup.style.display = 'block';
+        popupTitle.innerText = title;
+        popupText.innerText = msg;
+    }
+
+    function closePopup() {
+        overlay.style.display = 'none';
+    }
+
+    function unlockForm(name) {
+        nameInput.value = name;
+        nameInput.disabled = false;
+        mobileInput.disabled = false;
+        districtInput.disabled = false;
+        submitBtn.disabled = false;
+        mobileInput.focus();
+    }
+
+    function lockForm() {
+        nameInput.value = "";
+        nameInput.disabled = true;
+        mobileInput.disabled = true;
+        districtInput.disabled = true;
+        submitBtn.disabled = true;
+        passportInput.value = "";
+    }
+
+    // 3. GPS LOGIC
+    const locText = document.getElementById('locText');
+    const locDot = document.getElementById('locDot');
+    const locBadge = document.getElementById('locBadge');
+
+    window.onload = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    document.getElementById('lat').value = pos.coords.latitude;
+                    document.getElementById('long').value = pos.coords.longitude;
+                    locText.innerText = "GPS Connected";
+                }, 
+                () => {
+                    locText.innerText = "GPS Failed";
+                    locDot.classList.add("error");
+                    locBadge.classList.add("error");
+                }
+            );
+        }
+    };
+
+    // 4. SUBMISSION LOGIC
+    document.getElementById('collectionForm').addEventListener('submit', e => {
+        e.preventDefault();
+        showLoader();
+        
+        let body = {
+            name: nameInput.value,
+            passport: passportInput.value,
+            mobile: mobileInput.value,
+            district: districtInput.value,
+            lat: document.getElementById('lat').value,
+            long: document.getElementById('long').value
+        };
+
+        fetch(scriptURL, {
+            method: 'POST', mode: 'no-cors',
+            headers: {'Content-Type': 'text/plain;charset=utf-8'},
+            body: JSON.stringify(body)
+        }).then(() => {
+            hideLoader();
+            showPopup("Success", "Data saved successfully.");
+            lockForm();
+        }).catch(() => {
+            hideLoader();
+            showPopup("Error", "Submission failed.");
+        });
+    });
+</script>
+
+</body>
+</html>
