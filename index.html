@@ -8,7 +8,7 @@
     
     <style>
         :root {
-            --primary-color: #EE1C25; /* Makpower Red */
+            --primary-color: #EE1C25; 
             --primary-hover: #cc0000;
             --bg-color: #f4f7f6;
             --text-color: #333;
@@ -27,7 +27,6 @@
             color: var(--text-color);
         }
 
-        /* CARD DESIGN */
         .form-container {
             background: white;
             padding: 40px;
@@ -39,15 +38,8 @@
             transition: transform 0.3s ease;
         }
 
-        /* LOGO SECTION */
-        .logo-container {
-            margin-bottom: 25px;
-        }
-        .logo-container img {
-            max-height: 60px; 
-            max-width: 100%;
-            object-fit: contain;
-        }
+        .logo-container { margin-bottom: 25px; }
+        .logo-container img { max-height: 60px; max-width: 100%; object-fit: contain; }
 
         h2 {
             font-weight: 600;
@@ -57,100 +49,57 @@
             letter-spacing: -0.5px;
         }
 
-        /* FORM GROUPS */
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
+        .form-group { margin-bottom: 20px; text-align: left; }
         
         label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #7f8c8d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500;
+            color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
-        /* INPUT FIELDS */
         input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #eef2f7;
-            border-radius: var(--border-radius);
-            font-family: 'Poppins', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            color: #2c3e50;
-            background: #fdfdfd;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
+            width: 100%; padding: 14px 16px; border: 2px solid #eef2f7;
+            border-radius: var(--border-radius); font-family: 'Poppins', sans-serif;
+            font-size: 15px; font-weight: 500; color: #2c3e50; background: #fdfdfd;
+            box-sizing: border-box; transition: all 0.3s ease;
         }
 
         input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            background: white;
+            outline: none; border-color: var(--primary-color); background: white;
             box-shadow: 0 4px 15px rgba(238, 28, 37, 0.1);
         }
 
-        /* LOCKED STATE */
         input:disabled {
-            background-color: #f8f9fa;
-            border-color: #f0f0f0;
-            color: #aeb6bf;
-            cursor: not-allowed;
-            opacity: 0.8;
+            background-color: #f8f9fa; border-color: #f0f0f0; color: #aeb6bf;
+            cursor: not-allowed; opacity: 0.8;
         }
 
-        /* BUTTON DESIGN */
+        /* PRIMARY BUTTON (Form Submit) */
         button {
-            width: 100%;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 16px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(238, 28, 37, 0.2);
-            transition: all 0.3s ease;
+            width: 100%; background-color: var(--primary-color); color: white;
+            padding: 16px; border: none; border-radius: var(--border-radius);
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(238, 28, 37, 0.2); transition: all 0.3s ease;
             margin-top: 10px;
         }
 
         button:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
+            background-color: var(--primary-hover); transform: translateY(-2px);
             box-shadow: 0 15px 30px rgba(238, 28, 37, 0.3);
         }
         
         button:disabled {
-            background-color: #dcdde1;
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
-            color: #95a5a6;
+            background-color: #dcdde1; box-shadow: none; cursor: not-allowed;
+            transform: none; color: #95a5a6;
         }
 
-        /* HIDDEN LOCATION BADGE (Still works in background) */
-        .location-badge {
-            display: none; /* Hidden as requested */
-        }
-        .dot {
-            height: 8px; width: 8px;
-            background-color: #00b894;
-            border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.2);
-        }
-        .dot.error { background-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(238, 28, 37, 0.2); }
+        /* HIDDEN LOCATION BADGE */
+        .location-badge { display: none; }
+        .dot { height: 8px; width: 8px; background-color: #00b894; border-radius: 50%; }
 
         /* OVERLAY & POPUP */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px);
             display: none; justify-content: center; align-items: center; z-index: 999;
         }
         
@@ -161,12 +110,29 @@
         
         .popup {
             background: white; padding: 30px; border-radius: 20px;
-            text-align: center; width: 300px;
+            text-align: center; width: 320px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.15);
             display: none;
         }
-        .popup h3 { margin: 0 0 10px 0; color: #2d3436; }
-        .popup button { margin-top: 20px; padding: 12px; }
+        .popup h3 { margin: 0 0 15px 0; color: #2d3436; font-size: 20px; }
+        .popup p { color: #636e72; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+        
+        /* SECONDARY BUTTON (Instagram Redirect) */
+        .popup-btn {
+            background: #2d3436; margin-top: 15px; font-size: 14px; padding: 12px;
+            color: white; width: 100%; border: none; border-radius: var(--border-radius);
+            cursor: pointer; transition: background 0.3s;
+        }
+        .popup-btn:hover { background: #000; }
+        
+        /* Disabled State for Insta Button */
+        .popup-btn:disabled {
+            background: #ccc; cursor: not-allowed; color: #888;
+        }
+
+        .timer-text {
+            font-weight: 600; color: var(--primary-color); display: block; margin-top: 5px; font-size: 14px;
+        }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -175,10 +141,20 @@
 
 <div id="overlay" class="overlay">
     <div id="loader" class="spinner"></div>
+    
     <div id="popup" class="popup">
         <h3 id="popupTitle">Message</h3>
-        <p id="popupText" style="color:#636e72; font-size:14px;">Details</p>
+        <p id="popupText">Details</p>
         <button onclick="closePopup()">Continue</button>
+    </div>
+
+    <div id="redirectPopup" class="popup">
+        <h3 style="color: var(--primary-color);">Almost Done!</h3>
+        <p>Follow our Instagram page to receive your coupon code; once you follow us, we will send your Coupon code! Thanks!</p>
+        
+        <span id="countdown" class="timer-text">Wait 5s...</span>
+        
+        <button id="instaBtn" class="popup-btn" onclick="goToInsta()" disabled>Please Wait...</button>
     </div>
 </div>
 
@@ -189,52 +165,44 @@
 
     <h2>Coupon Registration</h2>
     
-    <div class="location-badge" id="locBadge">
-        <span class="dot" id="locDot"></span> 
-        <span id="locText">Locating...</span>
-    </div>
+    <div class="location-badge" id="locBadge"><span class="dot" id="locDot"></span><span id="locText"></span></div>
 
     <form id="collectionForm">
-        
         <div class="form-group">
             <label>Passport Number</label>
             <input type="text" id="passport" placeholder="Enter ID to Verify..." autocomplete="off" required>
         </div>
-
         <div class="form-group">
             <label>Full Name</label>
             <input type="text" id="fullName" placeholder="Locked" disabled>
         </div>
-
         <div class="form-group">
             <label>Whatsapp Mobile</label>
             <input type="tel" id="mobile" placeholder="Locked" disabled>
         </div>
-
         <div class="form-group">
             <label>District</label>
             <input type="text" id="district" placeholder="Locked" disabled>
         </div>
-
         <input type="hidden" id="lat"><input type="hidden" id="long">
-
         <button type="submit" id="submitBtn" disabled>Submit</button>
     </form>
 </div>
 
 <script>
-    // ==========================================
-    // CONFIGURATION
-    // ==========================================
+    // ================= CONFIGURATION =================
     const scriptURL = "https://script.google.com/macros/s/AKfycbywwNqeEiCL9MFH_gCaBdOVPAuATkiXvMiDM3XPI72CD5YBVfHpZ1EoFvm9jdgfFAEEkw/exec";
-    // ==========================================
+    const instaURL = "https://www.instagram.com/makpowerofficial/";
+    // =================================================
 
-    // DOM ELEMENTS
     const overlay = document.getElementById('overlay');
     const loader = document.getElementById('loader');
     const popup = document.getElementById('popup');
+    const redirectPopup = document.getElementById('redirectPopup');
     const popupTitle = document.getElementById('popupTitle');
     const popupText = document.getElementById('popupText');
+    const countdownSpan = document.getElementById('countdown');
+    const instaBtn = document.getElementById('instaBtn');
     
     const passportInput = document.getElementById('passport');
     const nameInput = document.getElementById('fullName');
@@ -242,13 +210,12 @@
     const districtInput = document.getElementById('district');
     const submitBtn = document.getElementById('submitBtn');
 
-    // 1. PASSPORT VALIDATION LOGIC
+    // --- 1. PASSPORT VALIDATION ---
     passportInput.addEventListener('change', function() {
         const val = this.value.trim();
         if(val.length < 2) return;
         
         showLoader();
-        
         fetch(`${scriptURL}?q=${encodeURIComponent(val)}`)
         .then(res => res.json())
         .then(data => {
@@ -267,70 +234,7 @@
         });
     });
 
-    // 2. HELPER FUNCTIONS
-    function showLoader() {
-        overlay.style.display = 'flex';
-        loader.style.display = 'block';
-        popup.style.display = 'none';
-        passportInput.blur();
-    }
-    
-    function hideLoader() {
-        loader.style.display = 'none';
-    }
-
-    function showPopup(title, msg) {
-        overlay.style.display = 'flex';
-        popup.style.display = 'block';
-        popupTitle.innerText = title;
-        popupText.innerText = msg;
-    }
-
-    function closePopup() {
-        overlay.style.display = 'none';
-    }
-
-    function unlockForm(name) {
-        nameInput.value = name;
-        nameInput.disabled = false;
-        mobileInput.disabled = false;
-        districtInput.disabled = false;
-        submitBtn.disabled = false;
-        mobileInput.focus();
-    }
-
-    function lockForm() {
-        nameInput.value = "";
-        nameInput.disabled = true;
-        mobileInput.disabled = true;
-        districtInput.disabled = true;
-        submitBtn.disabled = true;
-        passportInput.value = "";
-    }
-
-    // 3. GPS LOGIC (Runs silently in background)
-    const locText = document.getElementById('locText');
-    const locDot = document.getElementById('locDot');
-    const locBadge = document.getElementById('locBadge');
-
-    window.onload = function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    document.getElementById('lat').value = pos.coords.latitude;
-                    document.getElementById('long').value = pos.coords.longitude;
-                    locText.innerText = "GPS Connected";
-                }, 
-                () => {
-                    locText.innerText = "GPS Failed";
-                    locDot.classList.add("error");
-                    locBadge.classList.add("error");
-                }
-            );
-        }
-    };
-
-    // 4. SUBMISSION LOGIC
+    // --- 2. SUBMISSION & REDIRECT ---
     document.getElementById('collectionForm').addEventListener('submit', e => {
         e.preventDefault();
         showLoader();
@@ -350,13 +254,97 @@
             body: JSON.stringify(body)
         }).then(() => {
             hideLoader();
-            showPopup("Success", "Sent for verification."); // Changed message
+            startRedirectSequence(); // Trigger the manual flow
             lockForm();
         }).catch(() => {
             hideLoader();
             showPopup("Error", "Submission failed.");
         });
     });
+
+    // --- 3. TIMER & BUTTON LOGIC ---
+    function startRedirectSequence() {
+        overlay.style.display = 'flex';
+        popup.style.display = 'none';
+        redirectPopup.style.display = 'block';
+        
+        // Reset Button State
+        instaBtn.disabled = true;
+        instaBtn.innerText = "Please Wait...";
+        
+        let secondsLeft = 5;
+        countdownSpan.innerText = `Button unlocks in ${secondsLeft}s...`;
+
+        const timer = setInterval(() => {
+            secondsLeft--;
+            if(secondsLeft > 0) {
+                countdownSpan.innerText = `Button unlocks in ${secondsLeft}s...`;
+            } else {
+                clearInterval(timer);
+                // ENABLE BUTTON
+                countdownSpan.innerText = "Ready!";
+                countdownSpan.style.color = "#27ae60"; // Green
+                instaBtn.disabled = false;
+                instaBtn.innerText = "Get Coupon Code (Follow Us)";
+            }
+        }, 1000);
+    }
+
+    function goToInsta() {
+        window.location.href = instaURL;
+    }
+
+    // --- 4. UI HELPERS ---
+    function showLoader() {
+        overlay.style.display = 'flex';
+        loader.style.display = 'block';
+        popup.style.display = 'none';
+        redirectPopup.style.display = 'none';
+        passportInput.blur();
+    }
+    
+    function hideLoader() { loader.style.display = 'none'; }
+
+    function showPopup(title, msg) {
+        overlay.style.display = 'flex';
+        popup.style.display = 'block';
+        redirectPopup.style.display = 'none';
+        popupTitle.innerText = title;
+        popupText.innerText = msg;
+    }
+
+    function closePopup() { overlay.style.display = 'none'; }
+
+    function unlockForm(name) {
+        nameInput.value = name;
+        nameInput.disabled = false;
+        mobileInput.disabled = false;
+        districtInput.disabled = false;
+        submitBtn.disabled = false;
+        mobileInput.focus();
+    }
+
+    function lockForm() {
+        nameInput.value = "";
+        nameInput.disabled = true;
+        mobileInput.disabled = true;
+        districtInput.disabled = true;
+        submitBtn.disabled = true;
+        passportInput.value = "";
+    }
+
+    // --- 5. GPS (Background) ---
+    window.onload = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    document.getElementById('lat').value = pos.coords.latitude;
+                    document.getElementById('long').value = pos.coords.longitude;
+                }, 
+                () => { console.log("GPS denied"); }
+            );
+        }
+    };
 </script>
 
 </body>
