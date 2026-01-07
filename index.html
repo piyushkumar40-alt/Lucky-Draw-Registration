@@ -31,7 +31,7 @@
             background: white; padding: 40px; border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.08); width: 100%;
             max-width: 420px; text-align: center;
-            transition: all 0.3s ease; /* Smooth height adjustments */
+            transition: all 0.3s ease;
         }
 
         .logo-container { margin-bottom: 25px; }
@@ -66,7 +66,7 @@
         }
         .verify-btn:hover { background-color: var(--primary-color); color: white; transform: translateY(-2px); }
 
-        /* --- SLIDE DOWN SECTION --- */
+        /* Hidden Section Animation */
         .hidden-section {
             max-height: 0;
             opacity: 0;
@@ -75,7 +75,7 @@
         }
         
         .hidden-section.visible {
-            max-height: 1000px; /* Large enough to fit content */
+            max-height: 1000px; 
             opacity: 1;
         }
 
@@ -118,9 +118,14 @@
         <p id="popupText">Details</p>
         <button class="popup-btn" onclick="closePopup()">Continue</button>
     </div>
+    
     <div id="redirectPopup" class="popup">
         <h3 style="color: var(--primary-color);">Almost Done!</h3>
-        <p>Follow our Instagram page to receive your coupon code; once you follow us, we will send your Coupon code! Thanks!</p>
+        <p>
+            Follow our Instagram page to receive your coupon code; once you follow us, we will send your Coupon code! Thanks!
+            <br><br>
+            <b style="color: #EE1C25;">If you don't follow our Instagram page, then you won't get coupon.</b>
+        </p>
         <span id="countdown" class="timer-text">Wait 5s...</span>
         <button id="instaBtn" class="popup-btn" onclick="goToInsta()" disabled>Please Wait...</button>
     </div>
@@ -142,7 +147,6 @@
         </div>
 
         <div id="restOfForm" class="hidden-section">
-            
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text" id="fullName" placeholder="Locked" disabled>
@@ -196,7 +200,7 @@
     
     // Form Elements
     const passportInput = document.getElementById('passport');
-    const restOfForm = document.getElementById('restOfForm'); // The Slide Wrapper
+    const restOfForm = document.getElementById('restOfForm'); 
     
     const nameInput = document.getElementById('fullName');
     const mobileInput = document.getElementById('mobile');
@@ -296,7 +300,6 @@
         }).then(() => {
             hideLoader();
             startRedirectSequence(); 
-            // We don't lock immediately here so user sees success first
             setTimeout(lockForm, 2000); 
         }).catch(() => {
             hideLoader();
@@ -338,9 +341,7 @@
     function closePopup() { overlay.style.display = 'none'; }
 
     function unlockForm(name) {
-        // SLIDE DOWN THE FORM
         restOfForm.classList.add('visible');
-
         nameInput.value = name;
         nameInput.disabled = false;
         mobileInput.disabled = false;
@@ -357,9 +358,7 @@
     }
 
     function lockForm() {
-        // HIDE THE FORM
         restOfForm.classList.remove('visible');
-
         nameInput.value = ""; nameInput.disabled = true;
         mobileInput.value = ""; mobileInput.disabled = true;
         shopInput.value = ""; shopInput.disabled = true;
