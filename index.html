@@ -3,388 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Makpower India | Coupon Registration</title>
+    <title>Makpower India | Registration Closed</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-color: #EE1C25; 
-            --primary-hover: #D01019;
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --border-radius: 12px;
-        }
-
+        /* Styles for the Closed Message */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
+            background-color: #f4f7f6;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            color: var(--text-color);
+            color: #333;
         }
 
-        .form-container {
-            background: white; padding: 40px; border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08); width: 100%;
-            max-width: 420px; text-align: center;
-            transition: all 0.3s ease;
+        .closed-message-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
         }
 
-        .logo-container { margin-bottom: 25px; }
-        .logo-container img { max-height: 60px; max-width: 100%; object-fit: contain; }
-
-        h2 { font-weight: 600; color: #2c3e50; margin: 10px 0 30px 0; font-size: 22px; letter-spacing: -0.5px; }
-
-        .form-group { margin-bottom: 20px; text-align: left; position: relative; }
-        
-        label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 500; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        input, select {
-            width: 100%; padding: 14px 16px; border: 2px solid #eef2f7;
-            border-radius: var(--border-radius); font-family: 'Poppins', sans-serif;
-            font-size: 15px; font-weight: 500; color: #2c3e50; background: #fdfdfd;
-            box-sizing: border-box; transition: all 0.3s ease;
+        .closed-message-container h2 {
+            color: #EE1C25; /* Primary Color */
+            font-weight: 600;
+            margin-top: 0;
+            font-size: 24px;
         }
 
-        input:focus, select:focus { outline: none; border-color: var(--primary-color); background: white; box-shadow: 0 4px 15px rgba(238, 28, 37, 0.1); }
-        input:disabled, select:disabled { background-color: #f8f9fa; border-color: #f0f0f0; color: #aeb6bf; cursor: not-allowed; opacity: 0.8; }
-
-        /* Verify Row */
-        .verify-row { display: flex; gap: 12px; }
-        .verify-btn {
-            background-color: white; color: var(--primary-color);
-            border: 2px solid var(--primary-color); padding: 0 24px;
-            font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px;
-            border-radius: var(--border-radius); cursor: pointer;
-            transition: all 0.3s ease; text-transform: uppercase;
-            white-space: nowrap; margin-top: 0;
-            box-shadow: 0 4px 10px rgba(238, 28, 37, 0.1);
+        .closed-message-container p {
+            color: #7f8c8d;
+            font-size: 16px;
+            line-height: 1.5;
         }
-        .verify-btn:hover { background-color: var(--primary-color); color: white; transform: translateY(-2px); }
-
-        /* Hidden Section Animation */
-        .hidden-section {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.8s ease-in-out, opacity 0.5s ease-in-out;
-        }
-        
-        .hidden-section.visible {
-            max-height: 1000px; 
-            opacity: 1;
-        }
-
-        /* Submit Button */
-        .submit-btn {
-            width: 100%; background-color: var(--primary-color); color: white;
-            padding: 16px; border: none; border-radius: var(--border-radius);
-            font-size: 16px; font-weight: 600; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(238, 28, 37, 0.2); transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-        .submit-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
-        .submit-btn:disabled { background-color: #dcdde1; box-shadow: none; cursor: not-allowed; transform: none; color: #95a5a6; }
-
-        /* Validation Messages */
-        .status-msg { font-size: 12px; margin-top: 5px; display: block; height: 16px; }
-        .status-msg.error { color: #EE1C25; }
-        .status-msg.success { color: #27ae60; }
-        .status-msg.checking { color: #f39c12; }
-
-        /* Overlay & Popups */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 999; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; }
-        .popup { background: white; padding: 30px; border-radius: 20px; text-align: center; width: 320px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); display: none; }
-        .popup h3 { margin: 0 0 15px 0; color: #2d3436; font-size: 20px; }
-        .popup p { color: #636e72; font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
-        .popup-btn { background: #2d3436; margin-top: 15px; font-size: 14px; padding: 12px; color: white; width: 100%; border: none; border-radius: var(--border-radius); cursor: pointer; transition: background 0.3s; }
-        .popup-btn:disabled { background: #ccc; cursor: not-allowed; }
-        .timer-text { font-weight: 600; color: var(--primary-color); display: block; margin-top: 5px; font-size: 14px; }
-        
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div id="overlay" class="overlay">
-    <div id="loader" class="spinner"></div>
-    <div id="popup" class="popup">
-        <h3 id="popupTitle">Message</h3>
-        <p id="popupText">Details</p>
-        <button class="popup-btn" onclick="closePopup()">Continue</button>
-    </div>
-    
-    <div id="redirectPopup" class="popup">
-        <h3 style="color: var(--primary-color);">Almost Done!</h3>
-        <p>
-            Follow our Instagram page to receive your coupon code; once you follow us, we will send your Coupon code! Thanks!
-            <br><br>
-            <b style="color: #EE1C25;">If you don't follow our Instagram page, then you won't get coupon.</b>
-        </p>
-        <span id="countdown" class="timer-text">Wait 5s...</span>
-        <button id="instaBtn" class="popup-btn" onclick="goToInsta()" disabled>Please Wait...</button>
-    </div>
-</div>
-
-<div class="form-container">
-    <div class="logo-container"><img src="Mak_Logo 1212.jpg" alt="Makpower India Logo"></div>
-    <h2>Coupon Registration</h2>
-    <div style="display:none"><span id="locText"></span></div>
-
-    <form id="collectionForm">
-        
-        <div class="form-group">
-            <label>Passport Number</label>
-            <div class="verify-row">
-                <input type="text" id="passport" placeholder="Enter ID..." autocomplete="off" required>
-                <button type="button" class="verify-btn" onclick="checkPassport()">Verify</button>
-            </div>
+    <div class="closed-message-container">
+        <div style="margin-bottom: 25px;">
+            <img src="Mak_Logo 1212.jpg" alt="Makpower India Logo" style="max-height: 60px; max-width: 100%;">
         </div>
-
-        <div id="restOfForm" class="hidden-section">
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="fullName" placeholder="Locked" disabled>
-            </div>
-
-            <div class="form-group">
-                <label>Whatsapp Mobile</label>
-                <input type="tel" id="mobile" placeholder="Locked" disabled autocomplete="off">
-                <span id="mobileStatus" class="status-msg"></span>
-            </div>
-
-            <div class="form-group">
-                <label>Shop Name</label>
-                <input type="text" id="shopName" placeholder="Locked" disabled>
-            </div>
-
-            <div class="form-group">
-                <label>Are You?</label>
-                <select id="userRole" disabled>
-                    <option value="" selected disabled>Locked</option>
-                    <option value="SS">SS</option>
-                    <option value="Distributor">Distributor</option>
-                    <option value="Dealer">Dealer</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>District</label>
-                <input type="text" id="district" placeholder="Locked" disabled>
-            </div>
-
-            <button type="submit" id="submitBtn" class="submit-btn" disabled>Submit</button>
-        </div>
-        <input type="hidden" id="lat"><input type="hidden" id="long">
-    </form>
-</div>
-
-<script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbywwNqeEiCL9MFH_gCaBdOVPAuATkiXvMiDM3XPI72CD5YBVfHpZ1EoFvm9jdgfFAEEkw/exec";
-    const instaURL = "https://www.instagram.com/makpowerofficial/";
-
-    // Elements
-    const overlay = document.getElementById('overlay');
-    const loader = document.getElementById('loader');
-    const popup = document.getElementById('popup');
-    const redirectPopup = document.getElementById('redirectPopup');
-    const popupTitle = document.getElementById('popupTitle');
-    const popupText = document.getElementById('popupText');
-    const countdownSpan = document.getElementById('countdown');
-    const instaBtn = document.getElementById('instaBtn');
-    
-    // Form Elements
-    const passportInput = document.getElementById('passport');
-    const restOfForm = document.getElementById('restOfForm'); 
-    
-    const nameInput = document.getElementById('fullName');
-    const mobileInput = document.getElementById('mobile');
-    const mobileStatus = document.getElementById('mobileStatus');
-    const shopInput = document.getElementById('shopName');
-    const roleInput = document.getElementById('userRole');
-    const districtInput = document.getElementById('district');
-    const submitBtn = document.getElementById('submitBtn');
-
-    // --- 1. PASSPORT CHECK ---
-    function checkPassport() {
-        const val = passportInput.value.trim();
-        if(val.length < 2) {
-            showPopup("Input Error", "Please enter a valid Passport Number.");
-            return;
-        }
-        
-        showLoader();
-        fetch(`${scriptURL}?q=${encodeURIComponent(val)}`)
-        .then(res => res.json())
-        .then(data => {
-            hideLoader();
-            if(data.valid) {
-                showPopup("Identity Verified", "Welcome, " + data.name);
-                unlockForm(data.name);
-            } else {
-                showPopup("Access Denied", "Passport number not found.");
-                lockForm();
-            }
-        })
-        .catch(() => {
-            hideLoader();
-            showPopup("Error", "Connection failed.");
-        });
-    }
-
-    // --- 2. MOBILE DUPLICATE CHECK ---
-    mobileInput.addEventListener('change', function() {
-        const val = this.value.trim();
-        const mobileVal = parseInt(val);
-
-        if (isNaN(mobileVal) || mobileVal < 999999999 || mobileVal > 9999999999) {
-            setMobileStatus("Invalid Format (Must be 10 digits)", "error");
-            submitBtn.disabled = true;
-            return;
-        }
-
-        setMobileStatus("Checking availability...", "checking");
-        submitBtn.disabled = true;
-
-        fetch(`${scriptURL}?m=${encodeURIComponent(val)}`)
-        .then(res => res.json())
-        .then(data => {
-            if(data.duplicate) {
-                setMobileStatus("Number Already Registered!", "error");
-                submitBtn.disabled = true;
-            } else {
-                setMobileStatus("Available", "success");
-                submitBtn.disabled = false;
-            }
-        })
-        .catch(() => {
-            setMobileStatus("Check failed. Try again.", "error");
-        });
-    });
-
-    function setMobileStatus(msg, type) {
-        mobileStatus.innerText = msg;
-        mobileStatus.className = "status-msg " + type;
-    }
-
-    // --- 3. SUBMISSION ---
-    document.getElementById('collectionForm').addEventListener('submit', e => {
-        e.preventDefault();
-        
-        if(mobileInput.value === "" || submitBtn.disabled) return;
-        if(shopInput.value.trim() === "") { showPopup("Missing Info", "Enter Shop Name."); return; }
-        if(roleInput.value === "") { showPopup("Missing Info", "Select Role."); return; }
-
-        showLoader();
-        
-        let body = {
-            name: nameInput.value,
-            passport: passportInput.value,
-            mobile: mobileInput.value,
-            shop: shopInput.value,
-            role: roleInput.value,
-            district: districtInput.value,
-            lat: document.getElementById('lat').value,
-            long: document.getElementById('long').value
-        };
-
-        fetch(scriptURL, {
-            method: 'POST', mode: 'no-cors',
-            headers: {'Content-Type': 'text/plain;charset=utf-8'},
-            body: JSON.stringify(body)
-        }).then(() => {
-            hideLoader();
-            startRedirectSequence(); 
-            setTimeout(lockForm, 2000); 
-        }).catch(() => {
-            hideLoader();
-            showPopup("Error", "Submission failed.");
-        });
-    });
-
-    // --- 4. REDIRECT SEQUENCE ---
-    function startRedirectSequence() {
-        overlay.style.display = 'flex';
-        popup.style.display = 'none';
-        redirectPopup.style.display = 'block';
-        
-        instaBtn.disabled = true;
-        instaBtn.innerText = "Please Wait...";
-        let secondsLeft = 5;
-        countdownSpan.innerText = `Button unlocks in ${secondsLeft}s...`;
-
-        const timer = setInterval(() => {
-            secondsLeft--;
-            if(secondsLeft > 0) {
-                countdownSpan.innerText = `Button unlocks in ${secondsLeft}s...`;
-            } else {
-                clearInterval(timer);
-                countdownSpan.innerText = "Ready!";
-                countdownSpan.style.color = "#27ae60"; 
-                instaBtn.disabled = false;
-                instaBtn.innerText = "Get Coupon Code (Follow Us)";
-            }
-        }, 1000);
-    }
-
-    function goToInsta() { window.location.href = instaURL; }
-
-    // --- 5. UI UTILS ---
-    function showLoader() { overlay.style.display = 'flex'; loader.style.display = 'block'; popup.style.display = 'none'; redirectPopup.style.display = 'none'; }
-    function hideLoader() { loader.style.display = 'none'; }
-    function showPopup(title, msg) { overlay.style.display = 'flex'; popup.style.display = 'block'; redirectPopup.style.display = 'none'; popupTitle.innerText = title; popupText.innerText = msg; }
-    function closePopup() { overlay.style.display = 'none'; }
-
-    function unlockForm(name) {
-        restOfForm.classList.add('visible');
-        nameInput.value = name;
-        nameInput.disabled = false;
-        mobileInput.disabled = false;
-        shopInput.disabled = false;
-        roleInput.disabled = false;
-        districtInput.disabled = false;
-        submitBtn.disabled = false;
-
-        mobileInput.placeholder = "Enter 10 Digit No...";
-        shopInput.placeholder = "Enter Shop Name...";
-        districtInput.placeholder = "Enter District...";
-        roleInput.options[0].text = "Select Role...";
-        setMobileStatus("", "");
-    }
-
-    function lockForm() {
-        restOfForm.classList.remove('visible');
-        nameInput.value = ""; nameInput.disabled = true;
-        mobileInput.value = ""; mobileInput.disabled = true;
-        shopInput.value = ""; shopInput.disabled = true;
-        roleInput.value = ""; roleInput.disabled = true;
-        districtInput.value = ""; districtInput.disabled = true;
-        submitBtn.disabled = true; passportInput.value = "";
-        
-        mobileInput.placeholder = "Locked";
-        shopInput.placeholder = "Locked";
-        districtInput.placeholder = "Locked";
-        roleInput.options[0].text = "Locked";
-        setMobileStatus("", "");
-    }
-
-    window.onload = function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    document.getElementById('lat').value = pos.coords.latitude;
-                    document.getElementById('long').value = pos.coords.longitude;
-                }, 
-                () => { console.log("GPS denied"); }
-            );
-        }
-    };
-</script>
+        <h2>Registration is now closed</h2>
+        <p>Thank you for your interest. We are no longer accepting new coupon registrations at this time.</p>
+    </div>
 
 </body>
 </html>
