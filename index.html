@@ -122,9 +122,9 @@
     <div id="redirectPopup" class="popup">
         <h3 style="color: var(--primary-color);">Almost Done!</h3>
         <p>
-            Follow our Instagram page to receive your coupon code; once you follow us, we will send your Coupon code! Thanks!
+            Follow our Instagram page to complete the process.
             <br><br>
-            <b style="color: #EE1C25;">If you don't follow our Instagram page, then you won't get coupon.</b>
+            <b style="color: #EE1C25;">If you don't follow our Instagram page, your registration may not be completed.</b>
         </p>
         <span id="countdown" class="timer-text">Wait 5s...</span>
         <button id="instaBtn" class="popup-btn" onclick="goToInsta()" disabled>Please Wait...</button>
@@ -139,10 +139,10 @@
     <form id="collectionForm">
         
         <div class="form-group">
-            <label>Passport Number</label>
+            <label>Coupon Code</label>
             <div class="verify-row">
-                <input type="text" id="passport" placeholder="Enter ID..." autocomplete="off" required>
-                <button type="button" class="verify-btn" onclick="checkPassport()">Verify</button>
+                <input type="text" id="couponCode" placeholder="Enter Coupon..." autocomplete="off" required>
+                <button type="button" class="verify-btn" onclick="checkCoupon()">Verify</button>
             </div>
         </div>
 
@@ -198,8 +198,8 @@
     const countdownSpan = document.getElementById('countdown');
     const instaBtn = document.getElementById('instaBtn');
     
-    // Form Elements
-    const passportInput = document.getElementById('passport');
+    // Form Elements - Updated variable name
+    const couponInput = document.getElementById('couponCode');
     const restOfForm = document.getElementById('restOfForm'); 
     
     const nameInput = document.getElementById('fullName');
@@ -210,30 +210,33 @@
     const districtInput = document.getElementById('district');
     const submitBtn = document.getElementById('submitBtn');
 
-    // --- 1. PASSPORT CHECK ---
-    function checkPassport() {
-        const val = passportInput.value.trim();
-        if(val.length < 2) {
-            showPopup("Input Error", "Please enter a valid Passport Number.");
+    // --- 1. COUPON CHECK (Replaced Passport Check) ---
+    function checkCoupon() {
+        const val = couponInput.value.trim();
+        if(val.length < 3) {
+            showPopup("Input Error", "Please enter a valid Coupon Code.");
             return;
         }
         
         showLoader();
+        // Sending 'q' parameter which your script should use to search for Coupon now
         fetch(`${scriptURL}?q=${encodeURIComponent(val)}`)
         .then(res => res.json())
         .then(data => {
             hideLoader();
             if(data.valid) {
-                showPopup("Identity Verified", "Welcome, " + data.name);
-                unlockForm(data.name);
+                // If your script returns a name associated with the coupon, we use it
+                // Otherwise you can default to blank if the coupon doesn't belong to a specific person
+                showPopup("Coupon Verified", "Welcome! Code Accepted.");
+                unlockForm(data.name || ""); // Pass name if available
             } else {
-                showPopup("Access Denied", "Passport number not found.");
+                showPopup("Invalid Code", "This coupon code was not found.");
                 lockForm();
             }
         })
         .catch(() => {
             hideLoader();
-            showPopup("Error", "Connection failed.");
+            showPopup("Error", "Connection failed. Please check internet.");
         });
     }
 
@@ -284,7 +287,7 @@
         
         let body = {
             name: nameInput.value,
-            passport: passportInput.value,
+            couponCode: couponInput.value, // SENDING COUPON CODE HERE
             mobile: mobileInput.value,
             shop: shopInput.value,
             role: roleInput.value,
@@ -327,7 +330,7 @@
                 countdownSpan.innerText = "Ready!";
                 countdownSpan.style.color = "#27ae60"; 
                 instaBtn.disabled = false;
-                instaBtn.innerText = "Get Coupon Code (Follow Us)";
+                instaBtn.innerText = "Follow Us (Get Final Code)";
             }
         }, 1000);
     }
@@ -342,8 +345,17 @@
 
     function unlockForm(name) {
         restOfForm.classList.add('visible');
-        nameInput.value = name;
-        nameInput.disabled = false;
+        
+        // If the coupon returned a name, we use it, otherwise allow user to type
+        if(name && name.length > 1) {
+            nameInput.value = name;
+            nameInput.disabled = true; // Keep disabled if name came from coupon db
+        } else {
+            nameInput.value = "";
+            nameInput.placeholder = "Enter Full Name";
+            nameInput.disabled = false; // Enable if no name returned
+        }
+        
         mobileInput.disabled = false;
         shopInput.disabled = false;
         roleInput.disabled = false;
@@ -364,7 +376,7 @@
         shopInput.value = ""; shopInput.disabled = true;
         roleInput.value = ""; roleInput.disabled = true;
         districtInput.value = ""; districtInput.disabled = true;
-        submitBtn.disabled = true; passportInput.value = "";
+        submitBtn.disabled = true; couponInput.value = "";
         
         mobileInput.placeholder = "Locked";
         shopInput.placeholder = "Locked";
