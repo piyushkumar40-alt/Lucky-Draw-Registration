@@ -25,11 +25,16 @@ body{
   min-height:100vh;
 }
 
-/* HERO */
+/* HERO SECTION */
 .hero{
-  background:linear-gradient(135deg,#fff 0%,#fff3f4 100%);
+  background:linear-gradient(135deg,#ffffff 0%,#fff3f4 100%);
   padding:50px 20px;
   text-align:center;
+}
+
+.brand-logo{
+  max-width:140px;
+  margin-bottom:18px;
 }
 
 .hero h1{
@@ -102,11 +107,17 @@ button{
   box-shadow:0 10px 25px rgba(238,28,37,.2);
 }
 
-.primary-btn:hover{transform:translateY(-2px);}
+.primary-btn:hover{
+  transform:translateY(-2px);
+}
 
 .hidden{display:none;}
 
-.msg{font-size:13px;margin-top:10px;}
+.msg{
+  font-size:13px;
+  margin-top:10px;
+}
+
 .success{color:#16a34a;}
 .error{color:#dc2626;}
 
@@ -146,6 +157,10 @@ button{
   padding:20px;
 }
 
+@media(max-width:480px){
+  .brand-logo{max-width:110px;}
+}
+
 </style>
 </head>
 
@@ -156,6 +171,7 @@ button{
 </div>
 
 <div class="hero">
+  <img src="Mak_Logo 1212.jpg" alt="Makpower Logo" class="brand-logo">
   <h1>Makpower Rewards</h1>
   <p>Enter your coupon code & win exciting rewards</p>
 </div>
