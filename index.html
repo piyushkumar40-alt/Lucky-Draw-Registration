@@ -212,7 +212,8 @@
 
     // --- 1. COUPON CHECK ---
     function checkCoupon() {
-        const val = couponInput.value.trim();
+       const rawVal = couponInput.value;
+const val = rawVal.replace(/\D/g, "");  // removes spaces, dashes, anything non-digit
         if(val.length < 3) {
             showPopup("Input Error", "Please enter a valid Coupon Code.");
             return;
@@ -410,3 +411,4 @@
 
 </body>
 </html>
+
