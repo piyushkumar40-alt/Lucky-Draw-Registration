@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Makpower Coupon Campaign</title>
+<title>Makpower Rewards</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -13,7 +13,7 @@
   --primary:#EE1C25;
   --bg:#f8fafc;
   --text:#1e293b;
-  --light-text:#64748b;
+  --light:#64748b;
   --card:#ffffff;
 }
 
@@ -25,10 +25,10 @@ body{
   min-height:100vh;
 }
 
-/* HERO SECTION */
+/* HERO */
 .hero{
-  background:linear-gradient(135deg,#fff 0%,#fff5f6 100%);
-  padding:40px 20px;
+  background:linear-gradient(135deg,#fff 0%,#fff3f4 100%);
+  padding:50px 20px;
   text-align:center;
 }
 
@@ -36,15 +36,15 @@ body{
   font-size:26px;
   font-weight:700;
   color:var(--primary);
-  margin-bottom:8px;
 }
 
 .hero p{
   font-size:14px;
-  color:var(--light-text);
+  color:var(--light);
+  margin-top:6px;
 }
 
-/* FORM CARD */
+/* CARD */
 .container{
   padding:20px;
   display:flex;
@@ -57,18 +57,16 @@ body{
   max-width:420px;
   padding:28px;
   border-radius:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.05);
+  box-shadow:0 20px 50px rgba(0,0,0,.05);
   margin-top:-40px;
 }
 
-.input-group{
-  margin-bottom:18px;
-}
+.input-group{margin-bottom:18px;}
 
 label{
   font-size:12px;
   font-weight:600;
-  color:var(--light-text);
+  color:var(--light);
   display:block;
   margin-bottom:6px;
 }
@@ -104,17 +102,11 @@ button{
   box-shadow:0 10px 25px rgba(238,28,37,.2);
 }
 
-.primary-btn:hover{
-  transform:translateY(-2px);
-}
+.primary-btn:hover{transform:translateY(-2px);}
 
 .hidden{display:none;}
 
-.msg{
-  font-size:13px;
-  margin-top:10px;
-}
-
+.msg{font-size:13px;margin-top:10px;}
 .success{color:#16a34a;}
 .error{color:#dc2626;}
 
@@ -150,7 +142,7 @@ button{
 .footer{
   text-align:center;
   font-size:12px;
-  color:var(--light-text);
+  color:var(--light);
   padding:20px;
 }
 
@@ -243,8 +235,7 @@ function showMsg(msg,type){
 }
 
 function checkCoupon(){
-  const raw=document.getElementById("couponCode").value;
-  const code=normalize(raw);
+  const code=normalize(document.getElementById("couponCode").value);
 
   if(code.length<6){
     showMsg("Enter valid coupon code","error");
@@ -299,7 +290,6 @@ function submitForm(){
 
   fetch(scriptURL,{
     method:"POST",
-    headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       name:name,
       couponCode:couponCode,
@@ -311,9 +301,10 @@ function submitForm(){
       long:""
     })
   })
-  .then(res=>res.json())
-  .then(data=>{
+  .then(res=>res.text())
+  .then(text=>{
     hideOverlay();
+    const data=JSON.parse(text);
 
     if(data.status==="success"){
       showMsg("Registration Successful 🎉","success");
