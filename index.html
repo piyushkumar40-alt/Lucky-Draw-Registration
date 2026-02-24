@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mak Power Lucky Draw</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 
@@ -13,7 +13,7 @@
   --primary:#EE1C25;
   --bg:#f8fafc;
   --text:#1e293b;
-  --light:#64748b;
+  --light:#94a3b8;
   --card:#ffffff;
 }
 
@@ -25,6 +25,7 @@ body{
   min-height:100vh;
 }
 
+/* HERO */
 .hero{
   background:linear-gradient(135deg,#ffffff 0%,#fff3f4 100%);
   padding:50px 20px;
@@ -48,6 +49,7 @@ body{
   margin-top:6px;
 }
 
+/* CARD */
 .container{
   padding:20px;
   display:flex;
@@ -64,26 +66,46 @@ body{
   margin-top:-40px;
 }
 
-.input-group{margin-bottom:18px;}
-
-label{
-  font-size:12px;
-  font-weight:600;
-  color:var(--light);
-  display:block;
-  margin-bottom:6px;
+/* FLOATING INPUT */
+.input-group{
+  position:relative;
+  margin-bottom:22px;
 }
 
-input,select{
+.input-group input,
+.input-group select{
   width:100%;
-  padding:14px;
+  padding:18px 14px 8px 14px;
   border:1px solid #e2e8f0;
   border-radius:12px;
   font-size:14px;
+  background:#fff;
   transition:.2s;
 }
 
-input:focus,select:focus{
+.input-group label{
+  position:absolute;
+  left:14px;
+  top:16px;
+  font-size:14px;
+  color:var(--light);
+  pointer-events:none;
+  transition:.2s ease all;
+  background:#fff;
+  padding:0 4px;
+}
+
+/* FLOATING EFFECT */
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label,
+.input-group select:focus + label,
+.input-group select:not([value=""]) + label{
+  top:-8px;
+  font-size:11px;
+  color:var(--primary);
+}
+
+input:focus, select:focus{
   outline:none;
   border-color:var(--primary);
   box-shadow:0 0 0 3px rgba(238,28,37,.1);
@@ -119,6 +141,7 @@ button{
 .success{color:#16a34a;}
 .error{color:#dc2626;}
 
+/* LOADING */
 .overlay{
   position:fixed;
   top:0;
@@ -154,10 +177,6 @@ button{
   padding:20px;
 }
 
-@media(max-width:480px){
-  .brand-logo{max-width:110px;}
-}
-
 </style>
 </head>
 
@@ -168,7 +187,7 @@ button{
 </div>
 
 <div class="hero">
-  <img src="Mak_Logo 1212.jpg" alt="Makpower Logo" class="brand-logo">
+  <img src="Mak_Logo 1212.jpg" class="brand-logo">
   <h1>Mak Power Lucky Draw</h1>
   <p>Enter your coupon code & win exciting rewards</p>
 </div>
@@ -177,8 +196,8 @@ button{
   <div class="card">
 
     <div class="input-group">
+      <input type="text" id="couponCode" placeholder=" ">
       <label>Coupon Code</label>
-      <input type="text" id="couponCode" placeholder="Enter coupon code">
     </div>
 
     <button class="primary-btn" onclick="checkCoupon()">Verify Coupon</button>
@@ -188,33 +207,33 @@ button{
     <div id="formSection" class="hidden">
 
       <div class="input-group">
+        <input type="text" id="fullName" placeholder=" ">
         <label>Full Name</label>
-        <input type="text" id="fullName">
       </div>
 
       <div class="input-group">
+        <input type="tel" id="mobile" placeholder=" ">
         <label>Whatsapp Mobile</label>
-        <input type="tel" id="mobile">
       </div>
 
       <div class="input-group">
+        <input type="text" id="shop" placeholder=" ">
         <label>Shop Name</label>
-        <input type="text" id="shop">
       </div>
 
       <div class="input-group">
-        <label>Role</label>
-        <select id="role">
-          <option value="">Select Role</option>
+        <select id="role" required>
+          <option value="" disabled selected hidden></option>
           <option value="SS">SS</option>
           <option value="Distributor">Distributor</option>
           <option value="Dealer">Dealer</option>
         </select>
+        <label>Role</label>
       </div>
 
       <div class="input-group">
+        <input type="text" id="district" placeholder=" ">
         <label>District</label>
-        <input type="text" id="district">
       </div>
 
       <button class="primary-btn" onclick="submitForm()">Submit Registration</button>
@@ -229,8 +248,6 @@ button{
 </div>
 
 <script>
-
-/* JS unchanged — same working version */
 
 const scriptURL="https://script.google.com/macros/s/AKfycbywwNqeEiCL9MFH_gCaBdOVPAuATkiXvMiDM3XPI72CD5YBVfHpZ1EoFvm9jdgfFAEEkw/exec";
 
