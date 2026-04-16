@@ -8,175 +8,201 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-
-:root{
-  --primary:#EE1C25;
-  --bg:#f8fafc;
-  --text:#1e293b;
-  --light:#94a3b8;
-  --card:#ffffff;
+:root {
+  --primary: #EE1C25;
+  --insta: #E1306C;
+  --bg: #f8fafc;
+  --text: #1e293b;
+  --light: #94a3b8;
+  --card: #ffffff;
 }
 
-*{box-sizing:border-box;margin:0;padding:0;}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-  font-family:'Poppins',sans-serif;
-  background:var(--bg);
-  min-height:100vh;
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
 }
 
-/* HERO */
-.hero{
-  background:linear-gradient(135deg,#ffffff 0%,#fff3f4 100%);
-  padding:50px 20px;
-  text-align:center;
+/* HERO SECTION */
+.hero {
+  background: linear-gradient(135deg, #ffffff 0%, #fff3f4 100%);
+  padding: 50px 20px;
+  text-align: center;
+  transition: 0.3s;
 }
 
-.brand-logo{
-  max-width:140px;
-  margin-bottom:18px;
+.brand-logo {
+  max-width: 140px;
+  margin-bottom: 18px;
 }
 
-.hero h1{
-  font-size:26px;
-  font-weight:700;
-  color:var(--primary);
+.hero h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
 }
 
-.hero p{
-  font-size:14px;
-  color:var(--light);
-  margin-top:6px;
+.hero p {
+  font-size: 14px;
+  color: var(--light);
+  margin-top: 6px;
 }
 
-/* CARD */
-.container{
-  padding:20px;
-  display:flex;
-  justify-content:center;
+/* CONTAINER & CARD */
+.container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
 }
 
-.card{
-  background:var(--card);
-  width:100%;
-  max-width:420px;
-  padding:28px;
-  border-radius:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,.05);
-  margin-top:-40px;
+.card {
+  background: var(--card);
+  width: 100%;
+  max-width: 420px;
+  padding: 28px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.05);
+  margin-top: -40px;
+  position: relative;
+  z-index: 10;
 }
 
-/* FLOATING INPUT */
-.input-group{
-  position:relative;
-  margin-bottom:22px;
+/* FLOATING INPUTS */
+.input-group {
+  position: relative;
+  margin-bottom: 22px;
 }
 
 .input-group input,
-.input-group select{
-  width:100%;
-  padding:18px 14px 8px 14px;
-  border:1px solid #e2e8f0;
-  border-radius:12px;
-  font-size:14px;
-  background:#fff;
-  transition:.2s;
+.input-group select {
+  width: 100%;
+  padding: 18px 14px 8px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  background: #fff;
+  transition: .2s;
 }
 
-.input-group label{
-  position:absolute;
-  left:14px;
-  top:16px;
-  font-size:14px;
-  color:var(--light);
-  pointer-events:none;
-  transition:.2s ease all;
-  background:#fff;
-  padding:0 4px;
+.input-group label {
+  position: absolute;
+  left: 14px;
+  top: 16px;
+  font-size: 14px;
+  color: var(--light);
+  pointer-events: none;
+  transition: .2s ease all;
+  background: #fff;
+  padding: 0 4px;
 }
 
-/* FLOATING EFFECT */
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label,
 .input-group select:focus + label,
-.input-group select:not([value=""]) + label{
-  top:-8px;
-  font-size:11px;
-  color:var(--primary);
+.input-group select:not([value=""]) + label {
+  top: -8px;
+  font-size: 11px;
+  color: var(--primary);
 }
 
-input:focus, select:focus{
-  outline:none;
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(238,28,37,.1);
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(238,28,37,.1);
 }
 
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  font-weight:600;
-  cursor:pointer;
-  transition:.2s;
+/* BUTTONS */
+button, .btn-link {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+  text-align: center;
+  display: block;
+  text-decoration: none;
 }
 
-.primary-btn{
-  background:var(--primary);
-  color:#fff;
-  box-shadow:0 10px 25px rgba(238,28,37,.2);
+.primary-btn {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(238,28,37,.2);
 }
 
-.primary-btn:hover{
-  transform:translateY(-2px);
+.insta-btn {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
 }
 
-.hidden{display:none;}
-
-.msg{
-  font-size:13px;
-  margin-top:10px;
+button:hover, .btn-link:hover {
+  transform: translateY(-2px);
 }
 
-.success{color:#16a34a;}
-.error{color:#dc2626;}
-
-/* LOADING */
-.overlay{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(255,255,255,.9);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
-  display:none;
+/* MESSAGES & SECTIONS */
+.msg {
+  font-size: 13px;
+  margin: 15px 0;
+  display: block;
+  min-height: 20px;
+  line-height: 1.5;
 }
 
-.loader{
-  width:50px;
-  height:50px;
-  border:5px solid #f3f3f3;
-  border-top:5px solid var(--primary);
-  border-radius:50%;
-  animation:spin 1s linear infinite;
+#formSection, #followSection {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed #e2e8f0;
 }
 
-@keyframes spin{
-  0%{transform:rotate(0deg);}
-  100%{transform:rotate(360deg);}
+.hidden { display: none !important; }
+.success { color: #16a34a; }
+.error { color: #dc2626; }
+
+/* TIMER DISPLAY */
+#countdown {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 10px 0;
 }
 
-.footer{
-  text-align:center;
-  font-size:12px;
-  color:var(--light);
-  padding:20px;
+/* LOADING OVERLAY */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--light);
+  padding: 20px;
+}
 </style>
 </head>
 
@@ -186,43 +212,40 @@ button{
   <div class="loader"></div>
 </div>
 
-<div class="hero">
-  <img src="Mak_Logo 1212.jpg" class="brand-logo">
+<div class="hero" id="heroArea">
+  <img src="Mak_Logo 1212.jpg" class="brand-logo" alt="Mak Power">
   <h1>Mak Power Lucky Draw</h1>
   <p>Enter your coupon code & win exciting rewards</p>
 </div>
 
 <div class="container">
   <div class="card">
-
-    <div class="input-group">
-      <input type="text" id="couponCode" placeholder=" ">
-      <label>Coupon Code</label>
+    
+    <div id="couponArea">
+      <div class="input-group">
+        <input type="text" id="couponCode" placeholder=" ">
+        <label>Coupon Code</label>
+      </div>
+      <button class="primary-btn" onclick="checkCoupon()">Verify Coupon</button>
     </div>
-
-    <button class="primary-btn" onclick="checkCoupon()">Verify Coupon</button>
 
     <div id="mainMsg" class="msg"></div>
 
     <div id="formSection" class="hidden">
-
       <div class="input-group">
         <input type="text" id="fullName" placeholder=" ">
         <label>Full Name</label>
       </div>
-
       <div class="input-group">
         <input type="tel" id="mobile" placeholder=" ">
         <label>Whatsapp Mobile</label>
       </div>
-
       <div class="input-group">
         <input type="text" id="shop" placeholder=" ">
         <label>Shop Name</label>
       </div>
-
       <div class="input-group">
-        <select id="role" required>
+        <select id="role">
           <option value="" disabled selected hidden></option>
           <option value="SS">SS</option>
           <option value="Distributor">Distributor</option>
@@ -230,14 +253,26 @@ button{
         </select>
         <label>Role</label>
       </div>
-
       <div class="input-group">
         <input type="text" id="district" placeholder=" ">
         <label>District</label>
       </div>
-
       <button class="primary-btn" onclick="submitForm()">Submit Registration</button>
+    </div>
 
+    <div id="followSection" class="hidden" style="text-align:center;">
+      <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+      <h2 style="color:var(--text); margin-bottom:10px;">Registration Successful!</h2>
+      <p style="color:var(--light); font-size:14px;">Redirecting you to Instagram in...</p>
+      
+      <div id="countdown">5</div>
+
+      <a href="https://www.instagram.com/makpowerofficial/" target="_blank" class="btn-link insta-btn">
+        Follow @makpowerofficial Now
+      </a>
+      <p style="font-size:11px; color:var(--light); margin-top:15px;">
+        Follow us to participate in the live lucky draw!
+      </p>
     </div>
 
   </div>
@@ -248,109 +283,122 @@ button{
 </div>
 
 <script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbywwNqeEiCL9MFH_gCaBdOVPAuATkiXvMiDM3XPI72CD5YBVfHpZ1EoFvm9jdgfFAEEkw/exec";
+const instaURL = "https://www.instagram.com/makpowerofficial/";
 
-const scriptURL="https://script.google.com/macros/s/AKfycbywwNqeEiCL9MFH_gCaBdOVPAuATkiXvMiDM3XPI72CD5YBVfHpZ1EoFvm9jdgfFAEEkw/exec";
+let couponVerified = false;
+let userLat = "";
+let userLong = "";
 
-let couponVerified=false;
+// BACKGROUND GEOLOCATION
+window.onload = function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userLat = pos.coords.latitude;
+        userLong = pos.coords.longitude;
+      },
+      (err) => console.log("Location skipped."),
+      { timeout: 8000 }
+    );
+  }
+};
 
-function normalize(code){
-  return code.replace(/\D/g,'');
+function normalize(code) { return code.replace(/\D/g, ''); }
+function showOverlay() { document.getElementById("overlay").style.display = "flex"; }
+function hideOverlay() { document.getElementById("overlay").style.display = "none"; }
+
+function showMsg(msg, type) {
+  const el = document.getElementById("mainMsg");
+  el.innerText = msg;
+  el.className = "msg " + type;
 }
 
-function showOverlay(){document.getElementById("overlay").style.display="flex";}
-function hideOverlay(){document.getElementById("overlay").style.display="none";}
-
-function showMsg(msg,type){
-  const el=document.getElementById("mainMsg");
-  el.innerText=msg;
-  el.className="msg "+type;
-}
-
-function checkCoupon(){
-  const code=normalize(document.getElementById("couponCode").value);
-
-  if(code.length<6){
-    showMsg("Enter valid coupon code","error");
+function checkCoupon() {
+  const code = normalize(document.getElementById("couponCode").value);
+  if (code.length < 6) {
+    showMsg("Enter a valid 6-digit coupon code", "error");
     return;
   }
-
   showOverlay();
-
   fetch(`${scriptURL}?q=${code}`)
-  .then(res=>res.json())
-  .then(data=>{
-    hideOverlay();
-
-    if(data.valid){
-      couponVerified=true;
-      showMsg("Coupon verified successfully","success");
-      document.getElementById("formSection").classList.remove("hidden");
-    }else{
-      if(data.reason==="used"){
-        showMsg("Coupon already used","error");
-      }else{
-        showMsg("Invalid coupon","error");
+    .then(res => res.json())
+    .then(data => {
+      hideOverlay();
+      if (data.valid) {
+        couponVerified = true;
+        showMsg("Coupon verified! Fill in your details.", "success");
+        document.getElementById("couponArea").classList.add("hidden");
+        document.getElementById("formSection").classList.remove("hidden");
+      } else {
+        showMsg(data.reason === "used" ? "Coupon already used" : "Invalid coupon code", "error");
       }
-    }
-  })
-  .catch(()=>{
-    hideOverlay();
-    showMsg("Connection error","error");
-  });
+    })
+    .catch(() => {
+      hideOverlay();
+      showMsg("Connection error. Try again.", "error");
+    });
 }
 
-function submitForm(){
+function startRedirectTimer() {
+  let timeLeft = 5;
+  const timerDisplay = document.getElementById("countdown");
+  const interval = setInterval(() => {
+    timeLeft--;
+    timerDisplay.innerText = timeLeft;
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      window.location.href = instaURL;
+    }
+  }, 1000);
+}
 
-  if(!couponVerified){
-    showMsg("Verify coupon first","error");
-    return;
-  }
+function submitForm() {
+  const name = document.getElementById("fullName").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const shop = document.getElementById("shop").value.trim();
+  const role = document.getElementById("role").value;
+  const district = document.getElementById("district").value.trim();
+  const couponCode = normalize(document.getElementById("couponCode").value);
 
-  const name=document.getElementById("fullName").value.trim();
-  const mobile=document.getElementById("mobile").value.trim();
-  const shop=document.getElementById("shop").value.trim();
-  const role=document.getElementById("role").value;
-  const district=document.getElementById("district").value.trim();
-  const couponCode=normalize(document.getElementById("couponCode").value);
-
-  if(!name||!mobile||!shop||!role||!district){
-    showMsg("All fields are required","error");
+  if (!name || !mobile || !shop || !role || !district) {
+    showMsg("Please fill all fields", "error");
     return;
   }
 
   showOverlay();
 
-  fetch(scriptURL,{
-    method:"POST",
-    body:JSON.stringify({
-      name:name,
-      couponCode:couponCode,
-      mobile:mobile,
-      shop:shop,
-      role:role,
-      district:district,
-      lat:"",
-      long:""
+  fetch(scriptURL, {
+    method: "POST",
+    body: JSON.stringify({
+      name: name,
+      couponCode: couponCode,
+      mobile: mobile,
+      shop: shop,
+      role: role,
+      district: district,
+      lat: userLat,
+      long: userLong
     })
   })
-  .then(res=>res.text())
-  .then(text=>{
+  .then(res => res.json())
+  .then(data => {
     hideOverlay();
-    const data=JSON.parse(text);
-
-    if(data.status==="success"){
-      showMsg("Registration Successful 🎉","success");
+    if (data.status === "success") {
       document.getElementById("formSection").classList.add("hidden");
-    }else{
-      showMsg(data.message,"error");
+      document.getElementById("mainMsg").classList.add("hidden");
+      document.getElementById("heroArea").style.opacity = "0.3";
+      document.getElementById("followSection").classList.remove("hidden");
+      startRedirectTimer();
+    } else {
+      showMsg(data.message, "error");
     }
   })
-  .catch(()=>{
+  .catch(() => {
     hideOverlay();
-    showMsg("Submission failed","error");
+    showMsg("Submission failed. Check your internet.", "error");
   });
 }
-
 </script>
 
 </body>
