@@ -6,7 +6,7 @@
 <title>Mak Power Lucky Draw</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
- 
+
 <style>
 :root {
   --primary: #EE1C25;
@@ -17,7 +17,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
 body {
   font-family: 'Poppins', sans-serif;
   background: var(--bg);
@@ -32,7 +32,9 @@ body {
 }
 
 .brand-logo {
-  max-width: 140px;
+  max-width: 220px;
+  width: 100%;
+  height: auto;
   margin-bottom: 18px;
 }
 
@@ -98,8 +100,10 @@ body {
 
 .input-group input:focus ~ label,
 .input-group input:not(:placeholder-shown) ~ label,
+.input-group input.error-field ~ label,
 .custom-select-wrapper.open ~ label,
 .custom-select-wrapper.has-value ~ label,
+.custom-select-wrapper.error-field ~ label,
 .input-group select:focus ~ label,
 .input-group select:valid ~ label {
   top: -8px;
@@ -218,6 +222,22 @@ body {
   background: var(--light);
 }
 
+/* Error field styles */
+.input-group input.error-field {
+  border: 2px solid #dc2626;
+  background-color: #fffafb;
+}
+
+.custom-select-wrapper.error-field .custom-select-trigger {
+  border: 2px solid #dc2626;
+  background-color: #fffafb;
+}
+
+.input-group input.error-field ~ label,
+.custom-select-wrapper.error-field ~ label {
+  color: #dc2626 !important;
+}
+
 input:focus, select:focus {
   outline: none;
   border-color: var(--primary);
@@ -281,11 +301,47 @@ button, .btn-link {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,.9);
+  background: rgba(0,0,0,.4);
+  backdrop-filter: blur(4px);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 999;
+}
+
+/* MODAL CARD */
+.modal-card {
+  background: #ffffff;
+  padding: 32px 24px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  animation: modalShow 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+}
+
+@keyframes modalShow {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* .modal-icon is handled inline with SVG container styling */
+
+.modal-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #dc2626;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.modal-card div {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
 }
 
 .loader {
@@ -306,6 +362,21 @@ button, .btn-link {
 <body>
 
 <div class="overlay" id="overlay"><div class="loader"></div></div>
+
+<div class="overlay" id="errorModal" onclick="closeErrorModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-icon" style="color: #dc2626; display: flex; justify-content: center; align-items: center; margin-bottom: 16px;">
+      <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+        <line x1="12" y1="9" x2="12" y2="13"></line>
+        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+      </svg>
+    </div>
+    <h3 id="errorModalTitle">Oops! Error Details</h3>
+    <div id="errorModalText">Error message goes here</div>
+    <button class="primary-btn" onclick="closeErrorModal()" style="margin-top: 20px;">OK</button>
+  </div>
+</div>
 
 <div class="hero" id="heroArea">
   <img src="Mak_Logo 1212.jpg" class="brand-logo">
@@ -450,9 +521,25 @@ function showMsg(msg, type) {
   el.innerText = msg; el.className = "msg " + type;
 }
 
+function showErrorModal(errors) {
+  const textEl = document.getElementById("errorModalText");
+  if (Array.isArray(errors)) {
+    textEl.innerHTML = '<ul style="text-align: left; margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.6;">' + 
+      errors.map(err => `<li style="margin-bottom: 6px;">${err}</li>`).join('') + 
+      '</ul>';
+  } else {
+    textEl.innerHTML = `<p style="margin: 0; text-align: center;">${errors}</p>`;
+  }
+  document.getElementById("errorModal").style.display = "flex";
+}
+
+function closeErrorModal() {
+  document.getElementById("errorModal").style.display = "none";
+}
+
 function checkCoupon() {
   const code = normalize(document.getElementById("couponCode").value);
-  if (code.length < 6) { showMsg("Enter valid coupon", "error"); return; }
+  if (code.length < 6) { showErrorModal("Enter a valid coupon code."); return; }
   showOverlay();
   fetch(`${scriptURL}?q=${code}`).then(res => res.json()).then(data => {
     hideOverlay();
@@ -461,11 +548,29 @@ function checkCoupon() {
       showMsg("Verified! Enter details.", "success");
       document.getElementById("couponArea").classList.add("hidden");
       document.getElementById("formSection").classList.remove("hidden");
-    } else { showMsg("Invalid or Used Coupon", "error"); }
-  }).catch(() => { hideOverlay(); showMsg("Error connecting", "error"); });
+    } else {
+      if (data.reason === "used") {
+        showErrorModal("This coupon has already been used.");
+      } else {
+        showErrorModal("Invalid coupon code.");
+      }
+    }
+  }).catch(() => { hideOverlay(); showErrorModal("Error connecting to server. Please try again."); });
 }
 
 function submitForm() {
+  const fields = ['event', 'fullName', 'mobile', 'shop', 'role', 'state', 'district'];
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove('error-field');
+      const wrapper = el.nextElementSibling;
+      if (wrapper && wrapper.classList.contains('custom-select-wrapper')) {
+        wrapper.classList.remove('error-field');
+      }
+    }
+  });
+
   const event = document.getElementById("event").value;
   const name = document.getElementById("fullName").value.trim();
   const mobile = document.getElementById("mobile").value.trim();
@@ -475,8 +580,52 @@ function submitForm() {
   const district = document.getElementById("district").value.trim();
   const code = normalize(document.getElementById("couponCode").value);
 
-  if (!event || !name || !mobile || !shop || !role || !state || !district) {
-    showMsg("Fill all fields", "error"); return;
+  let hasError = false;
+  let errors = [];
+
+  function markError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.add('error-field');
+      const wrapper = el.nextElementSibling;
+      if (wrapper && wrapper.classList.contains('custom-select-wrapper')) {
+        wrapper.classList.add('error-field');
+      }
+    }
+    errors.push(msg);
+    hasError = true;
+  }
+
+  if (!event) {
+    markError('event', "Please select an Event");
+  }
+  if (!name) {
+    markError('fullName', "Full Name is required");
+  }
+  
+  const mobileRegex = /^[6-9]\d{9}$/;
+  if (!mobile) {
+    markError('mobile', "Whatsapp Mobile number is required");
+  } else if (!mobileRegex.test(mobile)) {
+    markError('mobile', "Enter a valid 10-digit mobile number");
+  }
+  
+  if (!shop) {
+    markError('shop', "Shop Name is required");
+  }
+  if (!role) {
+    markError('role', "Please select your Role");
+  }
+  if (!state) {
+    markError('state', "Please select your State");
+  }
+  if (!district) {
+    markError('district', "District is required");
+  }
+
+  if (hasError) {
+    showErrorModal(errors);
+    return;
   }
 
   showOverlay();
@@ -498,8 +647,8 @@ function submitForm() {
             window.location.href = instaURL;
         }
       }, 1000);
-    } else { showMsg(data.message, "error"); }
-  }).catch(() => { hideOverlay(); showMsg("Submission failed", "error"); });
+    } else { showErrorModal(data.message); }
+  }).catch(() => { hideOverlay(); showErrorModal("Submission failed. Please check your internet connection."); });
 }
 
 function initCustomSelects() {
@@ -542,6 +691,7 @@ function initCustomSelects() {
         
         wrapper.classList.remove('open');
         wrapper.classList.add('has-value');
+        wrapper.classList.remove('error-field');
       });
 
       optionsContainer.appendChild(optDiv);
@@ -572,6 +722,13 @@ function initCustomSelects() {
 
   document.addEventListener('click', () => {
     document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+  });
+
+  const textInputs = document.querySelectorAll('.input-group input');
+  textInputs.forEach(input => {
+    input.addEventListener('input', () => {
+      input.classList.remove('error-field');
+    });
   });
 }
 </script>
