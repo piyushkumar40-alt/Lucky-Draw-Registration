@@ -96,13 +96,126 @@ body {
   padding: 0 4px;
 }
 
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label,
-.input-group select:focus + label,
-.input-group select:not([value=""]) + label {
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label,
+.custom-select-wrapper.open ~ label,
+.custom-select-wrapper.has-value ~ label,
+.input-group select:focus ~ label,
+.input-group select:valid ~ label {
   top: -8px;
   font-size: 11px;
   color: var(--primary);
+}
+
+/* CUSTOM SELECT STYLES */
+.input-group select.hidden-select {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  padding: 18px 14px 8px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  background: #fff;
+  transition: .2s;
+  cursor: pointer;
+  display: block;
+  text-align: left;
+  position: relative;
+  min-height: 48px;
+  color: var(--text);
+  box-sizing: border-box;
+}
+
+.custom-select-trigger::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--light);
+  pointer-events: none;
+  transition: transform 0.2s ease, border-top-color 0.2s ease;
+}
+
+.custom-select-wrapper.open .custom-select-trigger::after {
+  transform: translateY(-75%) rotate(180deg);
+  border-top-color: var(--primary);
+}
+
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(238,28,37,.1);
+}
+
+.custom-options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  z-index: 999;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  box-sizing: border-box;
+}
+
+.custom-select-wrapper.open .custom-options {
+  display: block;
+}
+
+.custom-option {
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+  transition: background 0.15s, color 0.15s;
+}
+
+.custom-option:hover {
+  background-color: #fff3f4;
+  color: var(--primary);
+}
+
+.custom-option.selected {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+/* Custom scrollbar for options list */
+.custom-options::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-options::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 0 12px 12px 0;
+}
+.custom-options::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 6px;
+}
+.custom-options::-webkit-scrollbar-thumb:hover {
+  background: var(--light);
 }
 
 input:focus, select:focus {
@@ -215,6 +328,20 @@ button, .btn-link {
 
     <div id="formSection" class="hidden">
       <div class="input-group">
+        <select id="event" required>
+          <option value="" disabled selected hidden></option>
+          <option value="10th July Chandigarh Business Meet 2026">10th July Chandigarh Business Meet 2026</option>
+          <option value="11th July Pathankot Business Meet 2026">11th July Pathankot Business Meet 2026</option>
+          <option value="13th July Bareilly Business Meet 2026">13th July Bareilly Business Meet 2026</option>
+          <option value="15th July Ranchi Business Meet 2026">15th July Ranchi Business Meet 2026</option>
+          <option value="17th July Saharsa Business Meet 2026">17th July Saharsa Business Meet 2026</option>
+          <option value="18th July Bhagalpur Business Meet 2026">18th July Bhagalpur Business Meet 2026</option>
+          <option value="19th July Gaya Business Meet 2026">19th July Gaya Business Meet 2026</option>
+          <option value="20th July Patna Business Meet 2026">20th July Patna Business Meet 2026</option>
+        </select>
+        <label>Event 2026</label>
+      </div>
+      <div class="input-group">
         <input type="text" id="fullName" placeholder=" ">
         <label>Full Name</label>
       </div>
@@ -227,7 +354,7 @@ button, .btn-link {
         <label>Shop Name</label>
       </div>
       <div class="input-group">
-        <select id="role">
+        <select id="role" required>
           <option value="" disabled selected hidden></option>
           <option value="SS">SS</option>
           <option value="Distributor">Distributor</option>
@@ -237,7 +364,7 @@ button, .btn-link {
       </div>
       
       <div class="input-group">
-        <select id="state">
+        <select id="state" required>
           <option value="" disabled selected hidden></option>
           <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
           <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -311,6 +438,7 @@ window.onload = function() {
       userLat = pos.coords.latitude; userLong = pos.coords.longitude;
     }, null, {timeout: 5000});
   }
+  initCustomSelects();
 };
 
 function normalize(code) { return code.replace(/\D/g, ''); }
@@ -338,6 +466,7 @@ function checkCoupon() {
 }
 
 function submitForm() {
+  const event = document.getElementById("event").value;
   const name = document.getElementById("fullName").value.trim();
   const mobile = document.getElementById("mobile").value.trim();
   const shop = document.getElementById("shop").value.trim();
@@ -346,14 +475,14 @@ function submitForm() {
   const district = document.getElementById("district").value.trim();
   const code = normalize(document.getElementById("couponCode").value);
 
-  if (!name || !mobile || !shop || !role || !state || !district) {
+  if (!event || !name || !mobile || !shop || !role || !state || !district) {
     showMsg("Fill all fields", "error"); return;
   }
 
   showOverlay();
   fetch(scriptURL, {
     method: "POST",
-    body: JSON.stringify({ name, couponCode: code, mobile, shop, role, state, district, lat: userLat, long: userLong })
+    body: JSON.stringify({ event, name, couponCode: code, mobile, shop, role, state, district, lat: userLat, long: userLong })
   })
   .then(res => res.json()).then(data => {
     hideOverlay();
@@ -371,6 +500,79 @@ function submitForm() {
       }, 1000);
     } else { showMsg(data.message, "error"); }
   }).catch(() => { hideOverlay(); showMsg("Submission failed", "error"); });
+}
+
+function initCustomSelects() {
+  const selects = document.querySelectorAll('select');
+  selects.forEach(select => {
+    if (select.classList.contains('hidden-select')) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'custom-select-wrapper';
+    
+    select.parentNode.insertBefore(wrapper, select.nextSibling);
+    select.classList.add('hidden-select');
+
+    const trigger = document.createElement('div');
+    trigger.className = 'custom-select-trigger';
+    trigger.innerHTML = select.options[select.selectedIndex]?.text || '&nbsp;';
+    wrapper.appendChild(trigger);
+
+    const optionsContainer = document.createElement('div');
+    optionsContainer.className = 'custom-options';
+
+    Array.from(select.options).forEach(opt => {
+      if (opt.value === "" && (opt.disabled || opt.hidden)) return;
+      
+      const optDiv = document.createElement('div');
+      optDiv.className = 'custom-option';
+      optDiv.innerText = opt.text;
+      optDiv.dataset.value = opt.value;
+      if (opt.selected) optDiv.classList.add('selected');
+
+      optDiv.addEventListener('click', (e) => {
+        e.stopPropagation();
+        select.value = opt.value;
+        select.dispatchEvent(new Event('change'));
+        
+        trigger.innerHTML = opt.text || '&nbsp;';
+        
+        optionsContainer.querySelectorAll('.custom-option').forEach(el => el.classList.remove('selected'));
+        optDiv.classList.add('selected');
+        
+        wrapper.classList.remove('open');
+        wrapper.classList.add('has-value');
+      });
+
+      optionsContainer.appendChild(optDiv);
+    });
+
+    wrapper.appendChild(optionsContainer);
+
+    if (select.value) {
+      wrapper.classList.add('has-value');
+    }
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+        if (w !== wrapper) w.classList.remove('open');
+      });
+      wrapper.classList.toggle('open');
+    });
+    
+    select.addEventListener('change', () => {
+      if (select.value) {
+        wrapper.classList.add('has-value');
+      } else {
+        wrapper.classList.remove('has-value');
+      }
+    });
+  });
+
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+  });
 }
 </script>
 
