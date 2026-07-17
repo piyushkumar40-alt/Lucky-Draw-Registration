@@ -108,6 +108,17 @@ body {
 .input-group select:valid ~ label {
   top: -8px;
   font-size: 11px;
+}
+
+.input-group input:not(:placeholder-shown) ~ label,
+.custom-select-wrapper.has-value ~ label,
+.input-group select:valid ~ label {
+  color: var(--light);
+}
+
+.input-group input:focus ~ label,
+.custom-select-wrapper.open ~ label,
+.input-group select:focus ~ label {
   color: var(--primary);
 }
 
@@ -387,17 +398,9 @@ button, .btn-link {
 <div class="container">
   <div class="card">
     
-    <div id="couponArea">
-      <div class="input-group">
-        <input type="text" id="couponCode" placeholder=" ">
-        <label>Coupon Code</label>
-      </div>
-      <button class="primary-btn" onclick="checkCoupon()">Verify Coupon</button>
-    </div>
-
     <div id="mainMsg" class="msg"></div>
 
-    <div id="formSection" class="hidden">
+    <div id="formSection">
       <div class="input-group">
         <select id="event" required>
           <option value="" disabled selected hidden></option>
@@ -410,7 +413,7 @@ button, .btn-link {
           <option value="24th July Balrampur Business Meet 2026">24th July Balrampur Business Meet 2026</option>
           <option value="25th July Allahabad Business Meet 2026">25th July Allahabad Business Meet 2026</option>
           <option value="26th July Banda Business Meet 2026">26th July Banda Business Meet 2026</option>
-           <option value="27th July Jhansi Business Meet 2026">27th July Jhansi Business Meet 2026</option>
+          <option value="27th July Jhansi Business Meet 2026">27th July Jhansi Business Meet 2026</option>
         </select>
         <label>Event 2026</label>
       </div>
@@ -421,6 +424,10 @@ button, .btn-link {
       <div class="input-group">
         <input type="tel" id="mobile" placeholder=" ">
         <label>Whatsapp Mobile</label>
+      </div>
+      <div class="input-group">
+        <input type="text" id="couponCode" placeholder=" ">
+        <label>Coupon Code (Optional)</label>
       </div>
       <div class="input-group">
         <input type="text" id="shop" placeholder=" ">
@@ -539,29 +546,8 @@ function closeErrorModal() {
   document.getElementById("errorModal").style.display = "none";
 }
 
-function checkCoupon() {
-  const code = normalize(document.getElementById("couponCode").value);
-  if (code.length < 6) { showErrorModal("Enter a valid coupon code."); return; }
-  showOverlay();
-  fetch(`${scriptURL}?q=${code}`).then(res => res.json()).then(data => {
-    hideOverlay();
-    if (data.valid) {
-      couponVerified = true;
-      showMsg("Verified! Enter details.", "success");
-      document.getElementById("couponArea").classList.add("hidden");
-      document.getElementById("formSection").classList.remove("hidden");
-    } else {
-      if (data.reason === "used") {
-        showErrorModal("This coupon has already been used.");
-      } else {
-        showErrorModal("Invalid coupon code.");
-      }
-    }
-  }).catch(() => { hideOverlay(); showErrorModal("Error connecting to server. Please try again."); });
-}
-
-function submitForm() {
-  const fields = ['event', 'fullName', 'mobile', 'shop', 'role', 'state', 'district'];
+async function submitForm() {
+  const fields = ['event', 'fullName', 'mobile', 'couponCode', 'shop', 'role', 'state', 'district'];
   fields.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -611,6 +597,12 @@ function submitForm() {
   } else if (!mobileRegex.test(mobile)) {
     markError('mobile', "Enter a valid 10-digit mobile number");
   }
+
+  if (code.length > 0) {
+    if (code.length < 6) {
+      markError('couponCode', "Coupon code must be at least 6 digits");
+    }
+  }
   
   if (!shop) {
     markError('shop', "Shop Name is required");
@@ -631,11 +623,53 @@ function submitForm() {
   }
 
   showOverlay();
-  fetch(scriptURL, {
-    method: "POST",
-    body: JSON.stringify({ event, name, couponCode: code, mobile, shop, role, state, district, lat: userLat, long: userLong })
-  })
-  .then(res => res.json()).then(data => {
+
+  // Validate mobile number duplicate check via GET API
+  try {
+    const mobileRes = await fetch(`${scriptURL}?m=${mobile}`);
+    const mobileData = await mobileRes.json();
+    if (mobileData.duplicate) {
+      hideOverlay();
+      markError('mobile', "Mobile number already registered");
+      showErrorModal("Mobile number already registered");
+      return;
+    }
+  } catch (e) {
+    hideOverlay();
+    showErrorModal("Error checking mobile number registration status. Please try again.");
+    return;
+  }
+
+  // Validate coupon code only if it is entered by the user
+  if (code.length > 0) {
+    try {
+      const couponRes = await fetch(`${scriptURL}?q=${code}`);
+      const couponData = await couponRes.json();
+      if (!couponData.valid) {
+        hideOverlay();
+        if (couponData.reason === "used") {
+          markError('couponCode', "This coupon has already been used.");
+          showErrorModal("This coupon has already been used.");
+        } else {
+          markError('couponCode', "Invalid coupon code.");
+          showErrorModal("Invalid coupon code.");
+        }
+        return;
+      }
+    } catch (e) {
+      hideOverlay();
+      showErrorModal("Error verifying coupon code. Please try again.");
+      return;
+    }
+  }
+
+  // Submit registration form
+  try {
+    const res = await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({ event, name, couponCode: code, mobile, shop, role, state, district, lat: userLat, long: userLong })
+    });
+    const data = await res.json();
     hideOverlay();
     if (data.status === "success") {
       document.getElementById("formSection").classList.add("hidden");
@@ -649,8 +683,13 @@ function submitForm() {
             window.location.href = instaURL;
         }
       }, 1000);
-    } else { showErrorModal(data.message); }
-  }).catch(() => { hideOverlay(); showErrorModal("Submission failed. Please check your internet connection."); });
+    } else {
+      showErrorModal(data.message);
+    }
+  } catch (e) {
+    hideOverlay();
+    showErrorModal("Submission failed. Please check your internet connection.");
+  }
 }
 
 function initCustomSelects() {
