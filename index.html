@@ -519,6 +519,19 @@ window.onload = function() {
     }, null, {timeout: 5000});
   }
   initCustomSelects();
+
+  const eventSelect = document.getElementById("event");
+  const couponInput = document.getElementById("couponCode");
+  if (eventSelect && couponInput) {
+    const couponLabel = couponInput.nextElementSibling;
+    eventSelect.addEventListener('change', () => {
+      if (eventSelect.value === "20th July Patna Business Meet 2026") {
+        couponLabel.textContent = "Coupon Code (Required)";
+      } else {
+        couponLabel.textContent = "Coupon Code (Optional)";
+      }
+    });
+  }
 };
 
 function normalize(code) { return code.replace(/\D/g, ''); }
@@ -598,7 +611,13 @@ async function submitForm() {
     markError('mobile', "Enter a valid 10-digit mobile number");
   }
 
-  if (code.length > 0) {
+  if (event === "20th July Patna Business Meet 2026") {
+    if (code.length === 0) {
+      markError('couponCode', "Coupon code is required for Patna Business Meet");
+    } else if (code.length < 6) {
+      markError('couponCode', "Coupon code must be at least 6 digits");
+    }
+  } else if (code.length > 0) {
     if (code.length < 6) {
       markError('couponCode', "Coupon code must be at least 6 digits");
     }
