@@ -367,6 +367,15 @@ button, .btn-link {
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 .footer { text-align: center; font-size: 12px; color: var(--light); padding: 20px; }
+
+#confirmNoBtn {
+  background: #e2e8f0;
+  color: #475569;
+  box-shadow: none !important;
+}
+#confirmNoBtn:hover {
+  background: #cbd5e1;
+}
 </style>
 </head>
 
@@ -389,6 +398,24 @@ button, .btn-link {
   </div>
 </div>
 
+<div class="overlay" id="confirmModal">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-icon" style="color: #EE1C25; display: flex; justify-content: center; align-items: center; margin-bottom: 16px;">
+      <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </div>
+    <h3>Confirm Event</h3>
+    <div id="confirmModalText" style="font-size: 14px; margin-bottom: 20px;">Are you filling the registration for <strong>[Event Name]</strong>?</div>
+    <div style="display: flex; gap: 12px;">
+      <button class="primary-btn" id="confirmYesBtn" style="margin-top: 0; flex: 1;">Yes</button>
+      <button id="confirmNoBtn" style="margin-top: 0; flex: 1;">No</button>
+    </div>
+  </div>
+</div>
+
 <div class="hero" id="heroArea">
   <img src="Mak_Logo 1212.jpg" class="brand-logo">
   <h1>Mak Power Lucky Draw</h1>
@@ -404,8 +431,6 @@ button, .btn-link {
       <div class="input-group">
         <select id="event" required>
           <option value="" disabled selected hidden></option>
-          <option value="15th July Ranchi Business Meet 2026">15th July Ranchi Business Meet 2026</option>
-          <option value="17th July Saharsa Business Meet 2026">17th July Saharsa Business Meet 2026</option>
           <option value="18th July Bhagalpur Business Meet 2026">18th July Bhagalpur Business Meet 2026</option>
           <option value="19th July Gaya Business Meet 2026">19th July Gaya Business Meet 2026</option>
           <option value="20th July Patna Business Meet 2026">20th July Patna Business Meet 2026</option>
@@ -512,6 +537,77 @@ const instaURL = "https://www.instagram.com/makpowerofficial/";
 
 let couponVerified = false, userLat = "", userLong = "";
 
+function getSuggestedEvent() {
+  const events = [
+    { dateStr: "2026-07-15", value: "15th July Ranchi Business Meet 2026" },
+    { dateStr: "2026-07-17", value: "17th July Saharsa Business Meet 2026" },
+    { dateStr: "2026-07-18", value: "18th July Bhagalpur Business Meet 2026" },
+    { dateStr: "2026-07-19", value: "19th July Gaya Business Meet 2026" },
+    { dateStr: "2026-07-20", value: "20th July Patna Business Meet 2026" },
+    { dateStr: "2026-07-23", value: "23rd July Raebareily & Lucknow Business Meet 2026" },
+    { dateStr: "2026-07-24", value: "24th July Balrampur Business Meet 2026" },
+    { dateStr: "2026-07-25", value: "25th July Allahabad Business Meet 2026" },
+    { dateStr: "2026-07-26", value: "26th July Banda Business Meet 2026" },
+    { dateStr: "2026-07-27", value: "27th July Jhansi Business Meet 2026" }
+  ];
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const currentDateStr = `${year}-${month}-${day}`;
+  const currentHour = now.getHours();
+
+  // Find today's event
+  const todayEvent = events.find(e => e.dateStr === currentDateStr);
+
+  if (todayEvent) {
+    if (currentHour < 20) {
+      // Till 8 PM, today's event is active and should prompt for autofill
+      return { event: todayEvent.value, shouldAutofill: true };
+    } else if (currentHour < 23) {
+      // Between 8 PM and 11 PM, we do not autofill today's event
+      return { event: null, shouldAutofill: false };
+    } else {
+      // After 11 PM, select the next event
+      const nextEvent = events.find(e => e.dateStr > currentDateStr);
+      return { event: nextEvent ? nextEvent.value : null, shouldAutofill: !!nextEvent };
+    }
+  } else {
+    // If today is not an event day, find the next upcoming event
+    const nextEvent = events.find(e => e.dateStr > currentDateStr);
+    return { event: nextEvent ? nextEvent.value : null, shouldAutofill: !!nextEvent };
+  }
+}
+
+function showConfirmModal(eventName, onConfirm) {
+  const modal = document.getElementById("confirmModal");
+  const textEl = document.getElementById("confirmModalText");
+  const yesBtn = document.getElementById("confirmYesBtn");
+  const noBtn = document.getElementById("confirmNoBtn");
+
+  textEl.innerHTML = `You are filling for <br><strong>${eventName}</strong>.`;
+  modal.style.display = "flex";
+
+  const handleYes = () => {
+    onConfirm();
+    closeModal();
+  };
+
+  const handleNo = () => {
+    closeModal();
+  };
+
+  const closeModal = () => {
+    modal.style.display = "none";
+    yesBtn.removeEventListener("click", handleYes);
+    noBtn.removeEventListener("click", handleNo);
+  };
+
+  yesBtn.addEventListener("click", handleYes);
+  noBtn.addEventListener("click", handleNo);
+}
+
 window.onload = function() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -529,6 +625,17 @@ window.onload = function() {
         couponLabel.textContent = "Coupon Code (Required)";
       } else {
         couponLabel.textContent = "Coupon Code (Optional)";
+      }
+    });
+  }
+
+  // Autofill confirmation check
+  const suggestedInfo = getSuggestedEvent();
+  if (suggestedInfo.shouldAutofill && suggestedInfo.event) {
+    showConfirmModal(suggestedInfo.event, () => {
+      if (eventSelect) {
+        eventSelect.value = suggestedInfo.event;
+        eventSelect.dispatchEvent(new Event('change'));
       }
     });
   }
@@ -743,15 +850,7 @@ function initCustomSelects() {
         e.stopPropagation();
         select.value = opt.value;
         select.dispatchEvent(new Event('change'));
-        
-        trigger.innerHTML = opt.text || '&nbsp;';
-        
-        optionsContainer.querySelectorAll('.custom-option').forEach(el => el.classList.remove('selected'));
-        optDiv.classList.add('selected');
-        
         wrapper.classList.remove('open');
-        wrapper.classList.add('has-value');
-        wrapper.classList.remove('error-field');
       });
 
       optionsContainer.appendChild(optDiv);
@@ -774,8 +873,19 @@ function initCustomSelects() {
     select.addEventListener('change', () => {
       if (select.value) {
         wrapper.classList.add('has-value');
+        wrapper.classList.remove('error-field');
+        trigger.innerHTML = select.options[select.selectedIndex]?.text || '&nbsp;';
+        optionsContainer.querySelectorAll('.custom-option').forEach(el => {
+          if (el.dataset.value === select.value) {
+            el.classList.add('selected');
+          } else {
+            el.classList.remove('selected');
+          }
+        });
       } else {
         wrapper.classList.remove('has-value');
+        trigger.innerHTML = select.options[0]?.text || '&nbsp;';
+        optionsContainer.querySelectorAll('.custom-option').forEach(el => el.classList.remove('selected'));
       }
     });
   });
